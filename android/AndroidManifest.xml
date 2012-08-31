@@ -5,13 +5,13 @@
           android:versionName="1.0">
 
    <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="7"
         android:targetSdkVersion="16" />
 
    <application android:label="@string/app_name"
                 android:theme="@style/FrameworkRoot.Theme">
 
-      <activity android:name="MainActivity"
+      <activity android:name=".activities.MainActivity"
                 android:label="@string/app_name">
          <intent-filter>
             <action android:name="android.intent.action.MAIN"/>
