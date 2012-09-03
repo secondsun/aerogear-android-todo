@@ -9,6 +9,7 @@ APIs into your local Maven repository.  To do this, just do
 $ mvn install -P 4.1
 ```
 
-from the maven-android-sdk-deployer root directory.  Then a "mvn install" from the root directory
-of this project should successfully build everything, run the tests, and generate you a shiny
-new APK all set to install on your phone.
+from the maven-android-sdk-deployer root directory (note: make sure you've already installed all the
+relevant Android packages to your local SDK installation via the "android" tool).  Then running
+"mvn install" from the root directory of this project should successfully build everything, run the
+tests, and generate you a shiny new APK all set to install on your phone.
