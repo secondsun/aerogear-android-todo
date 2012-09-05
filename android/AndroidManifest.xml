@@ -4,20 +4,23 @@
           android:versionCode="1"
           android:versionName="1.0">
 
-   <uses-sdk
-        android:minSdkVersion="7"
-        android:targetSdkVersion="16" />
+    <uses-sdk
+            android:minSdkVersion="7"
+            android:targetSdkVersion="16"/>
 
-   <application android:label="@string/app_name"
-                android:theme="@style/FrameworkRoot.Theme">
+    <uses-permission android:name="android.permission.INTERNET"/>
 
-      <activity android:name=".activities.MainActivity"
-                android:label="@string/app_name">
-         <intent-filter>
-            <action android:name="android.intent.action.MAIN"/>
-            <category android:name="android.intent.category.LAUNCHER"/>
-         </intent-filter>
-      </activity>
-   </application>
-</manifest> 
+    <application android:label="@string/app_name"
+                 android:theme="@style/FrameworkRoot.Theme">
+
+        <activity android:name=".activities.MainActivity"
+                  android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <service android:name=".services.ToDoAPIService"/>
+    </application>
+</manifest>
 

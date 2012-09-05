@@ -15,24 +15,39 @@
  * limitations under the License.
  */
 
-package org.aerogear.proto.todos.activities;
-
-import android.os.Bundle;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import org.aerogear.android.AeroGear;
-import org.aerogear.proto.todos.Constants;
-import org.aerogear.proto.todos.R;
+package org.aerogear.proto.todos.data;
 
 /**
- * @author <a href="mailto:marko.strukelj@gmail.com">Marko Strukelj</a>
+ *
  */
-public class MainActivity extends SherlockFragmentActivity {
+public class Task {
+    private String title;
+
+    public Task() {
+    }
+
+    public Task(String title) {
+        this.title = title;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+    public String toString() {
+        return title;
+    }
 
-        AeroGear.initialize(Constants.API_KEY, Constants.ROOT_URL);
+    @Override
+    public boolean equals(Object o) {
+        if (o.getClass() != getClass()) return false;
+        Task other = (Task)o;
+        if (title == null) return other.getTitle() == null;
+        return title.equals(other.getTitle());
     }
 }
