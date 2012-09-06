@@ -31,6 +31,7 @@ import java.io.InputStreamReader;
 public class AeroGear {
     static String apiKey;
     static String rootUrl;
+    static Gson gson = new Gson();
 
     public static void initialize(String apiKey, String rootUrl) {
         AeroGear.apiKey = apiKey;
@@ -48,8 +49,19 @@ public class AeroGear {
     public static <T> T get(String url, Class<T> dataClass) throws Exception {
         InputStream is = Utils.getDataStream(url);
 
+        return deserialize(dataClass, is);
+    }
+
+    private static <T> T deserialize(Class<T> dataClass, InputStream is) {
         InputStreamReader reader = new InputStreamReader(is);
-        Gson gson = new Gson();
         return gson.fromJson(reader, dataClass);
+    }
+
+    public static <T> void post(String url, T dataObject) throws Exception {
+        Utils.post(url, gson.toJson(dataObject));
+    }
+
+    public static void delete(String url, String id) {
+        Utils.delete(url + "/" + id);
     }
 }

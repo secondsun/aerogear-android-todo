@@ -18,12 +18,16 @@
 package org.aerogear.proto.todos.fragments;
 
 import android.R;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import org.aerogear.proto.todos.Constants;
 import org.aerogear.proto.todos.data.Task;
@@ -33,8 +37,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ToDoListFragment extends ListFragment {
-    ArrayAdapter<Task> adapter;
-
+    // TODO: Sharing this via static fields isn't great.
+    // TODO: Move to Parcelables (which can go in the broadcast) or local DB/ContentProvider (persistent caching)
     public static List<Task> tasks = new ArrayList<Task>();
 
     private BroadcastReceiver taskRefreshReceiver = new BroadcastReceiver() {
@@ -45,6 +49,8 @@ public class ToDoListFragment extends ListFragment {
         }
     };
 
+    ArrayAdapter<Task> adapter;
+
     public ToDoListFragment() {
     }
 
@@ -54,11 +60,30 @@ public class ToDoListFragment extends ListFragment {
         adapter = new ArrayAdapter<Task>(getActivity(), R.layout.simple_list_item_1,
                                              tasks);
         setListAdapter(adapter);
+        getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l) {
+                final Task task = tasks.get(position);
+                new AlertDialog.Builder(getActivity())
+                        .setMessage("Delete '" + task.getTitle() + "'?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                startDelete(task);
+                            }
+                        })
+                        .setNegativeButton("Cancel", null)
+                        .show();
+                return true;
+            }
+        });
     }
 
     @Override
     public void onStart() {
         super.onStart();
+
+        // TODO: Helper APIs to make this simpler (callbacks instead of broadcasts)?
         getActivity().registerReceiver(taskRefreshReceiver, new IntentFilter(Constants.ACTION_REFRESH_TASKS));
         startRefresh();
     }
@@ -72,6 +97,13 @@ public class ToDoListFragment extends ListFragment {
     private void startRefresh() {
         Intent intent = new Intent(getActivity(), ToDoAPIService.class);
         intent.setAction(Constants.ACTION_REFRESH_TASKS);
+        getActivity().startService(intent);
+    }
+
+    private void startDelete(Task task) {
+        Intent intent = new Intent(getActivity(), ToDoAPIService.class);
+        intent.setAction(Constants.ACTION_DELETE_TASK);
+        intent.putExtra(Constants.EXTRA_TASK_ID, task.getId());
         getActivity().startService(intent);
     }
 }

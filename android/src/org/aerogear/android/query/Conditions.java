@@ -15,16 +15,10 @@
  * limitations under the License.
  */
 
-package org.aerogear.proto.todos;
+package org.aerogear.android.query;
 
-public class Constants {
-    public static final String API_KEY = "real_api_key_here";
-    public static final String ROOT_URL = "http://todo-aerogear.rhcloud.com/todo-server";
-
-    public static final String ACTION_REFRESH_TASKS = "org.aerogear.actions.refresh_tasks";
-    public static final String ACTION_POST_TASK = "org.aerogear.actions.post_task";
-    public static final String ACTION_DELETE_TASK = "org.aerogear.action.delete_task";
-
-    public static final String EXTRA_TASK_TITLE = "org.aerogear.extras.task_title";
-    public static final String EXTRA_TASK_ID = "org.aerogear.extras.task_id";
+/**
+ * Placeholder for query conditions
+ */
+public class Conditions {
 }
