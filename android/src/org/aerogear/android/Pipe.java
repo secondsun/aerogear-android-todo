@@ -28,7 +28,7 @@ import java.util.List;
  *
  * @param <T> the data class in the collection
  */
-public class AeroGearCollection<T> {
+public class Pipe<T> {
     private String url;
     private Class<T[]> exemplar;
 
@@ -38,7 +38,7 @@ public class AeroGearCollection<T> {
      * @param url the base URL (i.e. "items" would map to "http://server/items/")
      * @param exemplar we seem to need this b/c we can't get T's Class object without it.
      */
-    public AeroGearCollection(String url, Class<T[]> exemplar) {
+    public Pipe(String url, Class<T[]> exemplar) {
         this.url = url;
         this.exemplar = exemplar;
     }

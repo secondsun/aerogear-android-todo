@@ -21,7 +21,7 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
-import org.aerogear.android.AeroGearCollection;
+import org.aerogear.android.Pipe;
 import org.aerogear.proto.todos.Constants;
 import org.aerogear.proto.todos.data.Task;
 import org.aerogear.proto.todos.fragments.ToDoListFragment;
@@ -35,8 +35,7 @@ import org.aerogear.proto.todos.fragments.ToDoListFragment;
 public class ToDoAPIService extends IntentService {
     public static final String TAG = ToDoAPIService.class.getName();
 
-    private AeroGearCollection<Task> taskCollection =
-            new AeroGearCollection<Task>("tasks", Task[].class);
+    private Pipe<Task> tasks = new Pipe<Task>("tasks", Task[].class);
 
     public ToDoAPIService() {
         super(TAG);
@@ -77,7 +76,7 @@ public class ToDoAPIService extends IntentService {
 
     private void refreshTasks() throws Exception {
         // Use the AeroGearCollection to grab all the tasks from the backend into a shared List
-        taskCollection.getAll(ToDoListFragment.tasks);
+        tasks.getAll(ToDoListFragment.tasks);
 
         // All set, let everyone know...
         sendBroadcast(new Intent(Constants.ACTION_REFRESH_TASKS));
@@ -85,14 +84,14 @@ public class ToDoAPIService extends IntentService {
 
     private void postTask(Task task) throws Exception {
         // Use the AeroGearCollection to post a new Task to the backend
-        taskCollection.add(task);
+        tasks.add(task);
 
         // And refresh our list to pick up the new one
         refreshTasks();
     }
 
     private void deleteTask(String id) throws Exception {
-        taskCollection.delete(id);
+        tasks.delete(id);
 
         refreshTasks();
     }

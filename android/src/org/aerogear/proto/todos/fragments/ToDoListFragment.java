@@ -25,10 +25,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import com.actionbarsherlock.app.SherlockListFragment;
 import org.aerogear.proto.todos.Constants;
 import org.aerogear.proto.todos.data.Task;
 import org.aerogear.proto.todos.services.ToDoAPIService;
@@ -36,7 +36,7 @@ import org.aerogear.proto.todos.services.ToDoAPIService;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ToDoListFragment extends ListFragment {
+public class ToDoListFragment extends SherlockListFragment {
     // TODO: Sharing this via static fields isn't great.
     // TODO: Move to Parcelables (which can go in the broadcast) or local DB/ContentProvider (persistent caching)
     public static List<Task> tasks = new ArrayList<Task>();
