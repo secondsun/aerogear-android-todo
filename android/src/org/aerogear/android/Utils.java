@@ -23,6 +23,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.BasicHttpEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
@@ -35,50 +37,59 @@ import java.io.InputStream;
  *
  * TODO: Build this right, DRY it up, etc.
  */
-class Utils {
+public class Utils {
     public static final String TAG = "AeroGear";
 
-    static InputStream getDataStream(String url) {
-        HttpClient client = new DefaultHttpClient();
+    HttpClient client = new DefaultHttpClient();
+
+    public Utils() {
+    }
+
+    public InputStream get(String url) {
         HttpGet get = new HttpGet(getServerURL(url));
 
         // TODO: Figure out appropriate headers, authentication, etc.
         get.addHeader("X-AeroGear-Client", AeroGear.apiKey);
 
-        try {
-            final HttpResponse response = client.execute(get);
-            return response.getEntity().getContent();
-        } catch (IOException e) {
-            // TODO: Real error handling
-            Log.e(TAG, "Error on GET of " + getServerURL(url), e);
-            return null;
-        }
+        return getResponseStream(url, get);
     }
 
-    static InputStream post(String url, String data) {
-        HttpClient client = new DefaultHttpClient();
+    public InputStream post(String url, String data) {
         HttpPost post = new HttpPost(getServerURL(url));
         BasicHttpEntity entity = new BasicHttpEntity();
         entity.setContent(new ByteArrayInputStream(data.getBytes()));
         entity.setContentType("application/json");
         post.setEntity(entity);
 
+        return getResponseStream(url, post);
+    }
+
+    public InputStream put(String url, String data) {
+        HttpPut put = new HttpPut(getServerURL(url));
+        BasicHttpEntity entity = new BasicHttpEntity();
+        entity.setContent(new ByteArrayInputStream(data.getBytes()));
+        entity.setContentType("application/json");
+        put.setEntity(entity);
+
+        return getResponseStream(url, put);
+    }
+
+    private InputStream getResponseStream(String url, HttpRequestBase post) {
         try {
             final HttpResponse response = client.execute(post);
             return response.getEntity().getContent();
         } catch (IOException e) {
             // TODO: Real error handling
-            Log.e(TAG, "Error on POST of " + getServerURL(url), e);
+            Log.e(TAG, "Error on " + post.getMethod() + " of " + getServerURL(url), e);
             return null;
         }
     }
 
-    static String getServerURL(String url) {
+    public String getServerURL(String url) {
         return AeroGear.rootUrl + "/" + url;
     }
 
-    public static void delete(String url) {
-        HttpClient client = new DefaultHttpClient();
+    public void delete(String url) {
         HttpDelete delete = new HttpDelete(getServerURL(url));
         try {
             client.execute(delete);

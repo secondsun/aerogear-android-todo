@@ -83,7 +83,7 @@ public class ToDoAPIService extends IntentService {
     }
 
     private void postTask(Task task) throws Exception {
-        // Use the AeroGearCollection to post a new Task to the backend
+        // Use the AeroGearCollection to save a new Task to the backend
         tasks.add(task);
 
         // And refresh our list to pick up the new one

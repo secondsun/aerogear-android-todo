@@ -21,6 +21,7 @@ import com.google.gson.Gson;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Method;
 
 /**
  * AeroGear utility class containing useful methods for lifecycle, etc.
@@ -28,10 +29,18 @@ import java.io.InputStreamReader;
  * TODO: This is just a sketch - needs fleshing out and should live in separate project
  * TODO: Layer this better (raw data => object mapping => threading/async/callbacks)
  */
-public class AeroGear {
+public final class AeroGear {
     static String apiKey;
     static String rootUrl;
     static Gson gson = new Gson();
+    static Utils utils = new Utils();
+
+    public static void setUtils(Utils utils) {
+        AeroGear.utils = utils;
+    }
+
+    private AeroGear() {
+    }
 
     public static void initialize(String apiKey, String rootUrl) {
         AeroGear.apiKey = apiKey;
@@ -47,7 +56,7 @@ public class AeroGear {
      * @throws Exception if something goes awry
      */
     public static <T> T get(String url, Class<T> dataClass) throws Exception {
-        InputStream is = Utils.getDataStream(url);
+        InputStream is = utils.get(url);
 
         return deserialize(dataClass, is);
     }
@@ -57,11 +66,21 @@ public class AeroGear {
         return gson.fromJson(reader, dataClass);
     }
 
-    public static <T> void post(String url, T dataObject) throws Exception {
-        Utils.post(url, gson.toJson(dataObject));
+    public static <T> void save(String url, T dataObject) throws Exception {
+        final Method idGetter = dataObject.getClass().getMethod("getId");
+
+        final Object result = idGetter.invoke(dataObject);
+        String id = result == null ? null : result.toString();
+
+        // TODO: Make "id" field configurable
+        if (id == null || id.length() == 0) {
+            utils.post(url, gson.toJson(dataObject));
+        } else {
+            utils.put(url + "/" + id, gson.toJson(dataObject));
+        }
     }
 
     public static void delete(String url, String id) {
-        Utils.delete(url + "/" + id);
+        utils.delete(url + "/" + id);
     }
 }

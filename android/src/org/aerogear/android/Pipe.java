@@ -50,7 +50,7 @@ public class Pipe<T> {
      * @throws Exception something bad happened.
      */
     public void add(T item) throws Exception {
-        AeroGear.post(url, item);
+        AeroGear.save(url, item);
     }
 
     /**
