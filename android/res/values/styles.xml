@@ -1,18 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <!-- Empty parent idiom -->
-    <style name="NoParent" />
-
-    <!-- Root styles that vary by API level -->
-    <style name="FrameworkRoot.Theme" parent="Theme.Sherlock.Light.DarkActionBar">
-        <!-- API 11+ (compatibility) -->
-        <item name="buttonBarStyle">@style/Compat.ButtonBar</item>
-        <item name="buttonBarButtonStyle">@style/Compat.ButtonBarButton</item>
-        <item name="indeterminateProgressStyle">@style/Compat.IndeterminateProgress</item>
-        <!-- API 14+ (compatibility) -->
-        <item name="listPreferredItemPaddingLeft">@dimen/compat_list_preferred_item_padding_left</item>
-        <item name="listPreferredItemPaddingRight">@dimen/compat_list_preferred_item_padding_right</item>
-        <item name="listPreferredItemHeightSmall">@dimen/compat_list_preferred_item_height_small</item>
+    <style name="Font">
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textSize">18dp</item>
     </style>
-
+    <style name="FormLabel" parent="Font">
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+    </style>
+    <style name="Title">
+        <item name="android:textSize">24dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 </resources>

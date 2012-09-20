@@ -17,50 +17,113 @@
 
 package org.aerogear.proto.todos.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import org.aerogear.android.AeroGear;
-import org.aerogear.proto.todos.Constants;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import org.aerogear.proto.todos.R;
-import org.aerogear.proto.todos.services.ToDoAPIService;
+import org.aerogear.proto.todos.fragments.ProjectFormFragment;
+import org.aerogear.proto.todos.fragments.ProjectListFragment;
+import org.aerogear.proto.todos.fragments.TagFormFragment;
+import org.aerogear.proto.todos.fragments.TagListFragment;
+import org.aerogear.proto.todos.fragments.TaskFormFragment;
+import org.aerogear.proto.todos.fragments.TaskListFragment;
 
 /**
  * @author <a href="mailto:marko.strukelj@gmail.com">Marko Strukelj</a>
  */
 public class MainActivity extends SherlockFragmentActivity {
-    Button postButton;
-    EditText taskTitle;
+    private FragmentTransaction fragmentTransaction;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+        setContentView(R.layout.todo);
 
-        postButton = (Button)findViewById(R.id.post_button);
-        postButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String title = taskTitle.getText().toString();
-                if (title.length() < 1) {
-                    taskTitle.setError("Please enter a title");
-                    return;
-                }
+        if (savedInstanceState == null) {
 
-                Intent intent = new Intent(MainActivity.this, ToDoAPIService.class);
-                intent.setAction(Constants.ACTION_POST_TASK);
-                intent.putExtra(Constants.EXTRA_TASK_TITLE, title);
-                startService(intent);
+            fragmentTransaction = getSupportFragmentManager().beginTransaction();
 
-                taskTitle.setText(null);
+            if (isTablet()) {
+                fragmentTransaction
+                        .replace(R.id.project, new ProjectListFragment())
+                        .replace(R.id.tag, new TagListFragment())
+                        .replace(R.id.task, new TaskListFragment());
+            } else {
+                fragmentTransaction.replace(R.id.todo, new TaskListFragment());
             }
-        });
 
-        taskTitle = (EditText)findViewById(R.id.task_title);
+            fragmentTransaction.commit();
 
-        AeroGear.initialize(Constants.API_KEY, Constants.ROOT_URL);
+        }
+
+    }
+
+    private boolean isTablet() {
+        return getResources().getBoolean(R.bool.isTablet);
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getSupportMenuInflater().inflate(R.menu.todo, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        return !isTablet();
+    }
+
+    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_item_project:
+                showProjectList();
+                break;
+            case R.id.menu_item_tag:
+                showTagList();
+                break;
+            case R.id.menu_item_task:
+                showTaskList();
+                break;
+        }
+        return super.onMenuItemSelected(featureId, item);
+    }
+
+    public void showProjectForm() {
+        transaction(R.id.project, new ProjectFormFragment());
+    }
+
+    public void showProjectList() {
+        transaction(R.id.project, new ProjectListFragment());
+    }
+
+    public void showTagForm() {
+        transaction(R.id.tag, new TagFormFragment());
+    }
+
+    public void showTagList() {
+        transaction(R.id.tag, new TagListFragment());
+    }
+
+    public void showTaskForm() {
+        transaction(R.id.task, new TaskFormFragment());
+    }
+
+    public void showTaskList() {
+        transaction(R.id.task, new TaskListFragment());
+    }
+
+    private void transaction(int tabletFragmentId, Fragment fragment) {
+        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction
+                .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right,
+                                     android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+        if (isTablet()) {
+            fragmentTransaction.replace(tabletFragmentId, fragment);
+        } else {
+            fragmentTransaction.replace(R.id.todo, fragment);
+            fragmentTransaction.addToBackStack(null);
+        }
+        fragmentTransaction.commit();
     }
 }

@@ -23,8 +23,12 @@ import android.os.IBinder;
 import android.util.Log;
 import org.aerogear.android.Pipe;
 import org.aerogear.proto.todos.Constants;
+import org.aerogear.proto.todos.data.Project;
+import org.aerogear.proto.todos.data.Tag;
 import org.aerogear.proto.todos.data.Task;
-import org.aerogear.proto.todos.fragments.ToDoListFragment;
+import org.aerogear.proto.todos.fragments.ProjectListFragment;
+import org.aerogear.proto.todos.fragments.TagListFragment;
+import org.aerogear.proto.todos.fragments.TaskListFragment;
 
 /**
  * This is an IntentService which performs networking tasks (via the AeroGearCollection)
@@ -36,6 +40,8 @@ public class ToDoAPIService extends IntentService {
     public static final String TAG = ToDoAPIService.class.getName();
 
     private Pipe<Task> tasks = new Pipe<Task>("tasks", Task[].class);
+    private Pipe<Tag> tags = new Pipe<Tag>("tags", Tag[].class);
+    private Pipe<Project> projects = new Pipe<Project>("projects", Project[].class);
 
     public ToDoAPIService() {
         super(TAG);
@@ -48,18 +54,20 @@ public class ToDoAPIService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         String action = intent.getAction();
-        if (Constants.ACTION_REFRESH_TASKS.equals(action)) {
-            Log.d(TAG, "Refreshing tasks from server...");
+        if (Constants.ACTION_REFRESH_COLLECTIONS.equals(action)) {
+            String collectionName = intent.getStringExtra(Constants.EXTRA_COLLECTION_NAME);
+
+            Log.d(TAG, "Refreshing " + collectionName + " from server...");
             try {
-                refreshTasks();
+                refreshCollection(collectionName);
             } catch (Exception e) {
-                Log.d(TAG, "Coudldn't refresh tasks", e);
+                Log.d(TAG, "Coudldn't refresh " + collectionName, e);
             }
         } else if (Constants.ACTION_POST_TASK.equals(action)) {
             Log.d(TAG, "Sending new task to server...");
-            String title = intent.getStringExtra(Constants.EXTRA_TASK_TITLE);
+            Task task = intent.getParcelableExtra(Constants.EXTRA_TASK);
             try {
-                postTask(new Task(title));
+                postTask(task);
             } catch (Exception e) {
                 Log.d(TAG, "Couldn't post new task");
             }
@@ -74,12 +82,17 @@ public class ToDoAPIService extends IntentService {
         }
     }
 
-    private void refreshTasks() throws Exception {
-        // Use the AeroGearCollection to grab all the tasks from the backend into a shared List
-        tasks.getAll(ToDoListFragment.tasks);
+    private void refreshCollection(String name) throws Exception {
+        if (Constants.TAGS.equals(name)) {
+            tags.getAll(TagListFragment.tags);
+        } else if (Constants.TASKS.equals(name)) {
+            tasks.getAll(TaskListFragment.tasks);
+        } else if (Constants.PROJECTS.equals(name)) {
+            projects.getAll(ProjectListFragment.projects);
+        }
 
         // All set, let everyone know...
-        sendBroadcast(new Intent(Constants.ACTION_REFRESH_TASKS));
+        sendBroadcast(new Intent(Constants.ACTION_REFRESH_COLLECTIONS));
     }
 
     private void postTask(Task task) throws Exception {
@@ -87,12 +100,12 @@ public class ToDoAPIService extends IntentService {
         tasks.add(task);
 
         // And refresh our list to pick up the new one
-        refreshTasks();
+        refreshCollection(Constants.TASKS);
     }
 
     private void deleteTask(String id) throws Exception {
         tasks.delete(id);
 
-        refreshTasks();
+        refreshCollection(Constants.TASKS);
     }
 }

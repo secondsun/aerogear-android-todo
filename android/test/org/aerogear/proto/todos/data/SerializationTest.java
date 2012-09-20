@@ -8,12 +8,18 @@ import com.google.gson.Gson;
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 import org.aerogear.android.AeroGear;
+import org.aerogear.android.Utils;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.io.InputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
@@ -43,9 +49,23 @@ public class SerializationTest {
     }
 
     @Test
+    public void testRobolectricHTTP() throws Exception {
+        String TEST = "adf goi g ";
+        Robolectric.addPendingHttpResponse(200, TEST);
+        DefaultHttpClient client = new DefaultHttpClient();
+        HttpGet get = new HttpGet("url");
+        final HttpResponse response = client.execute(get);
+        final InputStream inputStream = response.getEntity().getContent();
+        final String next = new Scanner(inputStream).useDelimiter("\\A").next();
+        assertThat(next, equalTo(TEST));
+    }
+
+    @Test
     public void testGet() throws Exception {
         Task exampleItem = new Task("Test title");
         Robolectric.addPendingHttpResponse(200, gson.toJson(exampleItem));
+
+        AeroGear.setUtils(new Utils()); // TODO: Remove this after fixing test concurrency/mocking issues
 
         Task item = AeroGear.get("tasks/1", Task.class);
         assertThat(item, equalTo(exampleItem));

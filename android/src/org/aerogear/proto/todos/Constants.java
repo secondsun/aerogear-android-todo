@@ -21,10 +21,15 @@ public class Constants {
     public static final String API_KEY = "real_api_key_here";
     public static final String ROOT_URL = "http://todo-aerogear.rhcloud.com/todo-server";
 
-    public static final String ACTION_REFRESH_TASKS = "org.aerogear.actions.refresh_tasks";
+    public static final String TAGS = "tags";
+    public static final String TASKS = "tasks";
+    public static final String PROJECTS = "projects";
+
+    public static final String ACTION_REFRESH_COLLECTIONS = "org.aerogear.actions.refresh_tasks";
     public static final String ACTION_POST_TASK = "org.aerogear.actions.post_task";
     public static final String ACTION_DELETE_TASK = "org.aerogear.action.delete_task";
 
-    public static final String EXTRA_TASK_TITLE = "org.aerogear.extras.task_title";
+    public static final String EXTRA_COLLECTION_NAME = "org.aerogear.extras.collection_name";
+    public static final String EXTRA_TASK = "org.aerogear.extras.task";
     public static final String EXTRA_TASK_ID = "org.aerogear.extras.task_id";
 }

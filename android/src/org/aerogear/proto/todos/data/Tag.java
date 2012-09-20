@@ -17,22 +17,9 @@
 
 package org.aerogear.proto.todos.data;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-/**
- *
- */
-public class Task implements Parcelable {
+public class Tag {
     private String id;
     private String title;
-
-    public Task() {
-    }
-
-    public Task(String title) {
-        this.title = title;
-    }
 
     public String getId() {
         return id;
@@ -54,38 +41,4 @@ public class Task implements Parcelable {
     public String toString() {
         return title;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || o.getClass() != getClass()) return false;
-        Task other = (Task)o;
-        if (title == null) return other.getTitle() == null;
-        return title.equals(other.getTitle());
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(id);
-        parcel.writeString(title);
-    }
-
-    public static final Creator<Task> CREATOR = new Creator<Task>() {
-        @Override
-        public Task createFromParcel(Parcel parcel) {
-            Task ret = new Task();
-            ret.id = parcel.readString();
-            ret.title = parcel.readString();
-            return ret;
-        }
-
-        @Override
-        public Task[] newArray(int size) {
-            return new Task[size];
-        }
-    };
 }

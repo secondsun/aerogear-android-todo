@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-   <string name="app_name">TODOs</string>
-   <string name="hello_text">Hello :)</string>
+    <string name="app_name">TODOs</string>
+    <string name="projects">Projects</string>
+    <string name="tags">Tags</string>
+    <string name="tasks">Tasks</string>
+    <string name="title">Title:</string>
+    <string name="color">Color:</string>
+    <string name="date">Date:</string>
+    <string name="description">Description:</string>
+    <string name="add">Add</string>
+    <string name="cancel">Cancel</string>
 </resources>
