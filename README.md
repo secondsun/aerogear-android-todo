@@ -10,7 +10,7 @@ $ cd <wherever you installed the android-sdk-deployer>
 $ mvn install -P 4.1
 ```
 
-(note: make sure you've already installed all the relevant Android packages to your local
+NOTE: make sure you've already installed all the relevant Android packages to your local
 SDK installation via the "android" tool, as described in the documentation at https://github.com/mosabua/maven-android-sdk-deployer/blob/master/README.markdown.
 
 Then running "mvn install" from the root directory of *this* project should successfully build everything, run the
