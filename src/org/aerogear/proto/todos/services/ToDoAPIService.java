@@ -31,7 +31,7 @@ import org.aerogear.proto.todos.fragments.TagListFragment;
 import org.aerogear.proto.todos.fragments.TaskListFragment;
 
 /**
- * This is an IntentService which performs networking tasks (via the AeroGearCollection)
+ * This is an IntentService which performs networking tasks (via Pipes)
  * in the background.  Right now this exists as part of the application, but in the future
  * we may genericize it into an AeroGear-supplied service that you can just declare in your
  * manifest.
@@ -96,7 +96,7 @@ public class ToDoAPIService extends IntentService {
     }
 
     private void postTask(Task task) throws Exception {
-        // Use the AeroGearCollection to save a new Task to the backend
+        // Use the Pipe to save a new Task to the backend
         tasks.add(task);
 
         // And refresh our list to pick up the new one

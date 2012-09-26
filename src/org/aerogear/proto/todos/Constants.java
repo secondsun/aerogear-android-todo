@@ -25,7 +25,7 @@ public class Constants {
     public static final String TASKS = "tasks";
     public static final String PROJECTS = "projects";
 
-    public static final String ACTION_REFRESH_COLLECTIONS = "org.aerogear.actions.refresh_tasks";
+    public static final String ACTION_REFRESH_COLLECTIONS = "org.aerogear.actions.refresh_collections";
     public static final String ACTION_POST_TASK = "org.aerogear.actions.post_task";
     public static final String ACTION_DELETE_TASK = "org.aerogear.action.delete_task";
 
