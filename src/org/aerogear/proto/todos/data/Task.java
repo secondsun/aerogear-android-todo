@@ -64,6 +64,11 @@ public class Task implements Parcelable {
     }
 
     @Override
+    public int hashCode() {
+        return (title == null) ? 0 : title.hashCode();
+    }
+
+    @Override
     public int describeContents() {
         return 0;
     }
