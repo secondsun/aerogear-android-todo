@@ -24,8 +24,10 @@ import android.os.Parcelable;
  *
  */
 public class Task implements Parcelable {
+
     private String id;
     private String title;
+    private String description;
 
     public Task() {
     }
@@ -50,6 +52,14 @@ public class Task implements Parcelable {
         this.title = title;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     @Override
     public String toString() {
         return title;
@@ -72,15 +82,17 @@ public class Task implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(id);
         parcel.writeString(title);
+        parcel.writeString(description);
     }
 
     public static final Creator<Task> CREATOR = new Creator<Task>() {
         @Override
         public Task createFromParcel(Parcel parcel) {
-            Task ret = new Task();
-            ret.id = parcel.readString();
-            ret.title = parcel.readString();
-            return ret;
+            Task task = new Task();
+            task.id = parcel.readString();
+            task.title = parcel.readString();
+            task.description = parcel.readString();
+            return task;
         }
 
         @Override

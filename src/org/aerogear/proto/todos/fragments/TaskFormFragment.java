@@ -25,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import org.aerogear.proto.todos.Constants;
 import org.aerogear.proto.todos.R;
 import org.aerogear.proto.todos.activities.MainActivity;
@@ -32,28 +33,48 @@ import org.aerogear.proto.todos.data.Task;
 import org.aerogear.proto.todos.services.ToDoAPIService;
 
 public class TaskFormFragment extends Fragment {
-    private EditText title;
+
+    private Task task;
+
+    public TaskFormFragment() {
+        this.task = new Task();
+    }
+
+    public TaskFormFragment(Task task) {
+        this.task = task;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.form_task, null);
 
-        title = (EditText)view.findViewById(R.id.name);
-
+        TextView title = (TextView) view.findViewById(R.id.title);
         title.setText(getResources().getString(R.string.tasks));
+
+        if( task.getId() != null ) {
+            Button button = (Button) view.findViewById(R.id.buttonSave);
+            button.setText(R.string.update);
+        }
+
+        final EditText name = (EditText)view.findViewById(R.id.name);
+        final EditText description = (EditText)view.findViewById(R.id.description);
+
+        name.setText(task.getTitle());
+        description.setText(task.getDescription());
 
         Button buttonSave = (Button) view.findViewById(R.id.buttonSave);
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String titleStr = title.getText().toString();
-                if (titleStr.length() < 1) {
-                    title.setError("Please enter a title");
+                String nameStr = name.getText().toString();
+                if (nameStr.length() < 1) {
+                    name.setError("Please enter a title");
                     return;
                 }
 
-                Task task = new Task(titleStr);
+                task.setTitle(nameStr);
+                task.setDescription(description.getText().toString());
 
                 Intent intent = new Intent(getActivity(), ToDoAPIService.class);
                 intent.setAction(Constants.ACTION_POST_TASK);
