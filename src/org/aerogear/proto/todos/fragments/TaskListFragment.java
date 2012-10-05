@@ -58,17 +58,20 @@ public class TaskListFragment extends ListBaseFragment {
             }
         });
 
-        adapter = new ArrayAdapter<Task>(getActivity(), android.R.layout.simple_list_item_1,
-                                             tasks);
+        adapter = new ArrayAdapter<Task>(getActivity(), android.R.layout.simple_list_item_1, tasks);
         ListView todoListView = (ListView) view.findViewById(R.id.list);
         todoListView.setAdapter(adapter);
 
+        todoListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                final Task task = tasks.get(position);
+                ((MainActivity) getActivity()).showTaskForm(task);
+            }
+        });
+
         todoListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView,
-                                           View view,
-                                           int position,
-                                           long l) {
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
                 final Task task = tasks.get(position);
                 new AlertDialog.Builder(getActivity())
                         .setMessage("Delete '" + task.getTitle() + "'?")
