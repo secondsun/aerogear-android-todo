@@ -18,12 +18,10 @@
 package org.aerogear.proto.todos;
 
 import android.app.Application;
-import org.aerogear.android.AeroGear;
 
 public class ToDoApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        AeroGear.initialize(Constants.API_KEY, Constants.ROOT_URL);
     }
 }

@@ -24,6 +24,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import org.aerogear.proto.todos.R;
+import org.aerogear.proto.todos.data.Task;
 import org.aerogear.proto.todos.fragments.ProjectFormFragment;
 import org.aerogear.proto.todos.fragments.ProjectListFragment;
 import org.aerogear.proto.todos.fragments.TagFormFragment;
@@ -107,6 +108,10 @@ public class MainActivity extends SherlockFragmentActivity {
 
     public void showTaskForm() {
         transaction(R.id.task, new TaskFormFragment());
+    }
+
+    public void showTaskForm(Task task) {
+        transaction(R.id.task, new TaskFormFragment(task));
     }
 
     public void showTaskList() {

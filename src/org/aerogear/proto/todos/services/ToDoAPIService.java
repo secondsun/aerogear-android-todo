@@ -19,9 +19,11 @@ package org.aerogear.proto.todos.services;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.IBinder;
 import android.util.Log;
-import org.aerogear.android.Pipe;
+import org.aerogear.android.pipeline.Pipe;
+import org.aerogear.android.pipeline.Pipeline;
 import org.aerogear.proto.todos.Constants;
 import org.aerogear.proto.todos.data.Project;
 import org.aerogear.proto.todos.data.Tag;
@@ -29,6 +31,11 @@ import org.aerogear.proto.todos.data.Task;
 import org.aerogear.proto.todos.fragments.ProjectListFragment;
 import org.aerogear.proto.todos.fragments.TagListFragment;
 import org.aerogear.proto.todos.fragments.TaskListFragment;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import static org.aerogear.proto.todos.Constants.ROOT_URL;
 
 /**
  * This is an IntentService which performs networking tasks (via Pipes)
@@ -39,11 +46,14 @@ import org.aerogear.proto.todos.fragments.TaskListFragment;
 public class ToDoAPIService extends IntentService {
     public static final String TAG = ToDoAPIService.class.getName();
 
-    private Pipe<Task> tasks = new Pipe<Task>("tasks", Task[].class);
-    private Pipe<Tag> tags = new Pipe<Tag>("tags", Tag[].class);
-    private Pipe<Project> projects = new Pipe<Project>("projects", Project[].class);
+    private URL baseURL = new URL(Constants.ROOT_URL);
 
-    public ToDoAPIService() {
+    private Pipeline pipeline = new Pipeline("tasks", Task[].class, baseURL);
+    private Pipe<Task> tasks = pipeline.get("tasks");
+    private Pipe<Tag> tags = pipeline.add("tags", Tag[].class);
+    private Pipe<Project> projects = pipeline.add("projects", Project[].class);
+
+    public ToDoAPIService() throws MalformedURLException {
         super(TAG);
     }
 
@@ -97,14 +107,14 @@ public class ToDoAPIService extends IntentService {
 
     private void postTask(Task task) throws Exception {
         // Use the Pipe to save a new Task to the backend
-        tasks.add(task);
+        tasks.save(task);
 
         // And refresh our list to pick up the new one
         refreshCollection(Constants.TASKS);
     }
 
     private void deleteTask(String id) throws Exception {
-        tasks.delete(id);
+        tasks.remove(id);
 
         refreshCollection(Constants.TASKS);
     }
