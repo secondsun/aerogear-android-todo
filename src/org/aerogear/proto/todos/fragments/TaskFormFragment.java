@@ -17,31 +17,43 @@
 
 package org.aerogear.proto.todos.fragments;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.*;
+import com.actionbarsherlock.app.SherlockDialogFragment;
 import org.aerogear.proto.todos.Constants;
 import org.aerogear.proto.todos.R;
 import org.aerogear.proto.todos.activities.MainActivity;
 import org.aerogear.proto.todos.data.Task;
 import org.aerogear.proto.todos.services.ToDoAPIService;
 
+import java.util.Calendar;
+
 public class TaskFormFragment extends Fragment {
 
-    private Task task;
+    private final Task task;
+
+    private int day;
+    private int month;
+    private int year;
+
+    private EditText date;
 
     public TaskFormFragment() {
         this.task = new Task();
+        splitDate();
     }
 
     public TaskFormFragment(Task task) {
         this.task = task;
+        splitDate(task.getDate());
     }
 
     @Override
@@ -52,16 +64,25 @@ public class TaskFormFragment extends Fragment {
         TextView title = (TextView) view.findViewById(R.id.title);
         title.setText(getResources().getString(R.string.tasks));
 
+        final EditText name = (EditText)view.findViewById(R.id.name);
+        date = (EditText)view.findViewById(R.id.date);
+        final EditText description = (EditText)view.findViewById(R.id.description);
+
         if( task.getId() != null ) {
             Button button = (Button) view.findViewById(R.id.buttonSave);
             button.setText(R.string.update);
         }
 
-        final EditText name = (EditText)view.findViewById(R.id.name);
-        final EditText description = (EditText)view.findViewById(R.id.description);
-
         name.setText(task.getTitle());
+        date.setText(task.getDate());
         description.setText(task.getDescription());
+
+        ImageView buttonCalendar = (ImageView) view.findViewById(R.id.buttonCalendar);
+        buttonCalendar.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                showTimePickerDialog(view);
+            }
+        });
 
         Button buttonSave = (Button) view.findViewById(R.id.buttonSave);
         buttonSave.setOnClickListener(new View.OnClickListener() {
@@ -74,6 +95,7 @@ public class TaskFormFragment extends Fragment {
                 }
 
                 task.setTitle(nameStr);
+                task.setDate(date.getText().toString());
                 task.setDescription(description.getText().toString());
 
                 Intent intent = new Intent(getActivity(), ToDoAPIService.class);
@@ -95,5 +117,42 @@ public class TaskFormFragment extends Fragment {
         return view;
 
     }
+
+    private void showTimePickerDialog(View v) {
+        DialogFragment newFragment = new DatePickerFragment();
+        newFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
+    }
+
+    private void setDate() {
+        date.setText(year + "-" + String.format("%02d", month + 1) + "-" + String.format("%02d", day));
+    }
+
+    private void splitDate() {
+        final Calendar c = Calendar.getInstance();
+        day = c.get(Calendar.DAY_OF_MONTH);
+        month = c.get(Calendar.MONTH);
+        year = c.get(Calendar.YEAR);
+    }
+
+    private void splitDate(String date) {
+        String[] data = date.split("-");
+        year = Integer.valueOf(data[0]);
+        month = Integer.valueOf(data[1]) - 1;
+        day = Integer.valueOf(data[2]);
+    }
+
+    private class DatePickerFragment extends SherlockDialogFragment implements DatePickerDialog.OnDateSetListener {
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            return new DatePickerDialog(getActivity(), this, year, month, day);
+        }
+
+        public void onDateSet(DatePicker view, int year, int month, int day) {
+            TaskFormFragment.this.year = year;
+            TaskFormFragment.this.month = month;
+            TaskFormFragment.this.day = day;
+            setDate();
+        }
+    }
+
 }
 
