@@ -4,3 +4,4 @@ gen/
 gen-external-apklibs/
 tmp/
 *.iml
+out/
