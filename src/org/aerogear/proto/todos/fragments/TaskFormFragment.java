@@ -41,10 +41,6 @@ public class TaskFormFragment extends Fragment {
 
     private final Task task;
 
-    private int day;
-    private int month;
-    private int year;
-
     private EditText name;
     private EditText date;
     private EditText description;
@@ -53,12 +49,10 @@ public class TaskFormFragment extends Fragment {
 
     public TaskFormFragment() {
         this.task = new Task();
-        splitDate();
     }
 
     public TaskFormFragment(Task task) {
         this.task = task;
-        splitDate(task.getDate());
     }
 
     @Override
@@ -139,35 +133,45 @@ public class TaskFormFragment extends Fragment {
         newFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
     }
 
-    private void setDate() {
-        date.setText(year + "-" + String.format("%02d", month + 1) + "-" + String.format("%02d", day));
-    }
-
-    private void splitDate() {
-        final Calendar c = Calendar.getInstance();
-        day = c.get(Calendar.DAY_OF_MONTH);
-        month = c.get(Calendar.MONTH);
-        year = c.get(Calendar.YEAR);
-    }
-
-    private void splitDate(String date) {
-        String[] data = date.split("-");
-        year = Integer.valueOf(data[0]);
-        month = Integer.valueOf(data[1]) - 1;
-        day = Integer.valueOf(data[2]);
-    }
-
     private class DatePickerFragment extends SherlockDialogFragment implements DatePickerDialog.OnDateSetListener {
+
+        private int day;
+        private int month;
+        private int year;
+
+        public DatePickerFragment() {
+            splitDate(date.getText().toString());
+        }
+
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             return new DatePickerDialog(getActivity(), this, year, month, day);
         }
 
         public void onDateSet(DatePicker view, int year, int month, int day) {
-            TaskFormFragment.this.year = year;
-            TaskFormFragment.this.month = month;
-            TaskFormFragment.this.day = day;
+            this.year = year;
+            this.month = month;
+            this.day = day;
             setDate();
         }
+
+        private void setDate() {
+            date.setText(year + "-" + String.format("%02d", month + 1) + "-" + String.format("%02d", day));
+        }
+
+        private void splitDate(String date) {
+            if(pattern.matcher(date).matches()) {
+                String[] data = date.split("-");
+                year = Integer.valueOf(data[0]);
+                month = Integer.valueOf(data[1]) - 1;
+                day = Integer.valueOf(data[2]);
+            } else {
+                final Calendar c = Calendar.getInstance();
+                day = c.get(Calendar.DAY_OF_MONTH);
+                month = c.get(Calendar.MONTH);
+                year = c.get(Calendar.YEAR);
+            }
+        }
+
     }
 
 }
