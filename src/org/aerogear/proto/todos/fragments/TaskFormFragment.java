@@ -35,6 +35,7 @@ import org.aerogear.proto.todos.data.Task;
 import org.aerogear.proto.todos.services.ToDoAPIService;
 
 import java.util.Calendar;
+import java.util.regex.Pattern;
 
 public class TaskFormFragment extends Fragment {
 
@@ -44,7 +45,11 @@ public class TaskFormFragment extends Fragment {
     private int month;
     private int year;
 
+    private EditText name;
     private EditText date;
+    private EditText description;
+
+    private static Pattern pattern = Pattern.compile("\\d{4}-\\d{2}-\\d{2}");
 
     public TaskFormFragment() {
         this.task = new Task();
@@ -64,9 +69,9 @@ public class TaskFormFragment extends Fragment {
         TextView title = (TextView) view.findViewById(R.id.title);
         title.setText(getResources().getString(R.string.tasks));
 
-        final EditText name = (EditText)view.findViewById(R.id.name);
+        name = (EditText)view.findViewById(R.id.name);
         date = (EditText)view.findViewById(R.id.date);
-        final EditText description = (EditText)view.findViewById(R.id.description);
+        description = (EditText)view.findViewById(R.id.description);
 
         if( task.getId() != null ) {
             Button button = (Button) view.findViewById(R.id.buttonSave);
@@ -86,15 +91,12 @@ public class TaskFormFragment extends Fragment {
 
         Button buttonSave = (Button) view.findViewById(R.id.buttonSave);
         buttonSave.setOnClickListener(new View.OnClickListener() {
-            @Override
             public void onClick(View view) {
-                String nameStr = name.getText().toString();
-                if (nameStr.length() < 1) {
-                    name.setError("Please enter a title");
+                if(!isValid()) {
                     return;
                 }
 
-                task.setTitle(nameStr);
+                task.setTitle(name.getText().toString());
                 task.setDate(date.getText().toString());
                 task.setDescription(description.getText().toString());
 
@@ -117,6 +119,20 @@ public class TaskFormFragment extends Fragment {
         return view;
 
     }
+
+    private boolean isValid() {
+        boolean valid = true;
+        if (name.getText().toString().length() < 1) {
+            name.setError("Please enter a title");
+            valid = false;
+        }
+        if (!pattern.matcher(date.getText().toString()).matches()) {
+            date.setError("Please enter a valid date");
+            valid = false;
+        }
+        return valid;
+    }
+
 
     private void showTimePickerDialog(View v) {
         DialogFragment newFragment = new DatePickerFragment();
