@@ -18,7 +18,6 @@
 package org.aerogear.proto.todos;
 
 public class Constants {
-    public static final String API_KEY = "real_api_key_here";
     public static final String ROOT_URL = "http://todo-aerogear.rhcloud.com/todo-server";
 
     public static final String TAGS = "tags";
@@ -26,10 +25,15 @@ public class Constants {
     public static final String PROJECTS = "projects";
 
     public static final String ACTION_REFRESH_COLLECTIONS = "org.aerogear.actions.refresh_collections";
+    public static final String EXTRA_COLLECTION_NAME = "org.aerogear.extras.collection_name";
+
     public static final String ACTION_POST_TASK = "org.aerogear.actions.post_task";
     public static final String ACTION_DELETE_TASK = "org.aerogear.action.delete_task";
-
-    public static final String EXTRA_COLLECTION_NAME = "org.aerogear.extras.collection_name";
     public static final String EXTRA_TASK = "org.aerogear.extras.task";
     public static final String EXTRA_TASK_ID = "org.aerogear.extras.task_id";
+
+    public static final String ACTION_POST_PROJECT = "org.aerogear.actions.post_project";
+    public static final String ACTION_DELETE_PROJECT = "org.aerogear.action.delete_project";
+    public static final String EXTRA_PROJECT = "org.aerogear.extras.project";
+    public static final String EXTRA_PROJECT_ID = "org.aerogear.extras.project_id";
 }
