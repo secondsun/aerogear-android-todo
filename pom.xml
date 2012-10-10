@@ -11,6 +11,8 @@
 
     <properties>
         <proguard.skip>true</proguard.skip>
+        <android.avd>15</android.avd>
+        <debug>true</debug>
     </properties>
 
     <dependencies>
@@ -123,13 +125,13 @@
                 <artifactId>android-maven-plugin</artifactId>
                 <configuration>
                     <run>
-                        <debug>true</debug>
+                        <debug>${debug}</debug>
                     </run>
                     <sdk>
                         <platform>16</platform>
                     </sdk>
                     <emulator>
-                        <avd>15</avd>
+                        <avd>${android.avd}</avd>
                     </emulator>
                     <undeployBeforeDeploy>true</undeployBeforeDeploy>
                     <proguard>
