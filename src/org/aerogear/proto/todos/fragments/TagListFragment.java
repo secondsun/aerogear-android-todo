@@ -17,18 +17,20 @@
 
 package org.aerogear.proto.todos.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.*;
 import org.aerogear.proto.todos.Constants;
 import org.aerogear.proto.todos.R;
 import org.aerogear.proto.todos.activities.MainActivity;
 import org.aerogear.proto.todos.data.Tag;
+import org.aerogear.proto.todos.data.Tag;
+import org.aerogear.proto.todos.services.ToDoAPIService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,11 +53,34 @@ public class TagListFragment extends ListBaseFragment {
             }
         });
 
-        adapter = new ArrayAdapter<Tag>(getActivity(), android.R.layout.simple_list_item_1,
-                                        tags);
-
+        adapter = new ArrayAdapter<Tag>(getActivity(), android.R.layout.simple_list_item_1, tags);
         ListView tagListView = (ListView) view.findViewById(R.id.list);
         tagListView.setAdapter(adapter);
+
+        tagListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                final Tag tag = tags.get(position);
+                ((MainActivity) getActivity()).showTagForm(tag);
+            }
+        });
+
+        tagListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
+                final Tag tag = tags.get(position);
+                new AlertDialog.Builder(getActivity())
+                        .setMessage("Delete '" + tag.getTitle() + "'?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                startDelete(tag);
+                            }
+                        })
+                        .setNegativeButton("Cancel", null)
+                        .show();
+                return true;
+            }
+        });
 
         return view;
 
@@ -66,5 +91,12 @@ public class TagListFragment extends ListBaseFragment {
         super.onStart();
         startRefresh(Constants.TAGS);
     }
+
+    private void startDelete(Tag tag) {
+        Intent intent = new Intent(getActivity(), ToDoAPIService.class);
+        intent.setAction(Constants.ACTION_DELETE_TAG);
+        intent.putExtra(Constants.EXTRA_TAG_ID, tag.getId());
+        getActivity().startService(intent);
+    }    
 
 }

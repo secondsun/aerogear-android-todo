@@ -17,6 +17,9 @@
 
 package org.aerogear.proto.todos.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +29,8 @@ import org.aerogear.proto.todos.Constants;
 import org.aerogear.proto.todos.R;
 import org.aerogear.proto.todos.activities.MainActivity;
 import org.aerogear.proto.todos.data.Project;
+import org.aerogear.proto.todos.data.Task;
+import org.aerogear.proto.todos.services.ToDoAPIService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,10 +53,34 @@ public class ProjectListFragment extends ListBaseFragment {
             }
         });
 
-        adapter = new ArrayAdapter<Project>(getActivity(), android.R.layout.simple_list_item_1,
-                                            projects);
+        adapter = new ArrayAdapter<Project>(getActivity(), android.R.layout.simple_list_item_1, projects);
         ListView projectListView = (ListView) view.findViewById(R.id.list);
         projectListView.setAdapter(adapter);
+
+        projectListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                final Project project = projects.get(position);
+                ((MainActivity) getActivity()).showProjectForm(project);
+            }
+        });
+
+        projectListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
+                final Project project = projects.get(position);
+                new AlertDialog.Builder(getActivity())
+                        .setMessage("Delete '" + project.getTitle() + "'?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                startDelete(project);
+                            }
+                        })
+                        .setNegativeButton("Cancel", null)
+                        .show();
+                return true;
+            }
+        });
 
         return view;
 
@@ -61,5 +90,12 @@ public class ProjectListFragment extends ListBaseFragment {
     public void onStart() {
         super.onStart();
         startRefresh(Constants.PROJECTS);
+    }
+
+    private void startDelete(Project project) {
+        Intent intent = new Intent(getActivity(), ToDoAPIService.class);
+        intent.setAction(Constants.ACTION_DELETE_PROJECT);
+        intent.putExtra(Constants.EXTRA_PROJECT_ID, project.getId());
+        getActivity().startService(intent);
     }
 }

@@ -17,7 +17,10 @@
 
 package org.aerogear.proto.todos.data;
 
-public class Project {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Project implements Parcelable  {
     private String id;
     private String title;
 
@@ -41,4 +44,44 @@ public class Project {
     public String toString() {
         return title;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Project project = (Project) o;
+        if (title != null ? !title.equals(project.title) : project.title != null) return false;
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return title != null ? title.hashCode() : 0;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int flags) {
+        parcel.writeString(id);
+        parcel.writeString(title);
+    }
+
+    public static final Creator<Project> CREATOR = new Creator<Project>() {
+        @Override
+        public Project createFromParcel(Parcel parcel) {
+            Project project = new Project();
+            project.id = parcel.readString();
+            project.title = parcel.readString();
+            return project;
+        }
+
+        @Override
+        public Project[] newArray(int size) {
+            return new Project[size];
+        }
+    };
 }

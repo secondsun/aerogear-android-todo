@@ -48,8 +48,8 @@ public class ToDoAPIService extends IntentService {
 
     private URL baseURL = new URL(Constants.ROOT_URL);
 
-    private Pipeline pipeline = new Pipeline("tasks", Task[].class, baseURL);
-    private Pipe<Task> tasks = pipeline.get("tasks");
+    private Pipeline pipeline = new Pipeline(baseURL);
+    private Pipe<Task> tasks = pipeline.add("tasks", Task[].class);
     private Pipe<Tag> tags = pipeline.add("tags", Tag[].class);
     private Pipe<Project> projects = pipeline.add("projects", Project[].class);
 
@@ -66,7 +66,6 @@ public class ToDoAPIService extends IntentService {
         String action = intent.getAction();
         if (Constants.ACTION_REFRESH_COLLECTIONS.equals(action)) {
             String collectionName = intent.getStringExtra(Constants.EXTRA_COLLECTION_NAME);
-
             Log.d(TAG, "Refreshing " + collectionName + " from server...");
             try {
                 refreshCollection(collectionName);
@@ -77,7 +76,8 @@ public class ToDoAPIService extends IntentService {
             Log.d(TAG, "Sending new task to server...");
             Task task = intent.getParcelableExtra(Constants.EXTRA_TASK);
             try {
-                postTask(task);
+                tasks.save(task);
+                refreshCollection(Constants.TASKS);
             } catch (Exception e) {
                 Log.d(TAG, "Couldn't post new task");
             }
@@ -85,9 +85,46 @@ public class ToDoAPIService extends IntentService {
             Log.d(TAG, "Sending new task to server...");
             String id = intent.getStringExtra(Constants.EXTRA_TASK_ID);
             try {
-                deleteTask(id);
+                tasks.remove(id);
+                refreshCollection(Constants.TASKS);
             } catch (Exception e) {
                 Log.d(TAG, "Couldn't delete task ID " + id);
+            }
+        } else if (Constants.ACTION_POST_PROJECT.equals(action)) {
+            Log.d(TAG, "Sending new project to server...");
+            Project project = intent.getParcelableExtra(Constants.EXTRA_PROJECT);
+            try {
+                projects.save(project);
+                refreshCollection(Constants.PROJECTS);
+            } catch (Exception e) {
+                Log.d(TAG, "Couldn't post new project");
+            }
+        } else if (Constants.ACTION_DELETE_PROJECT.equals(action)) {
+            Log.d(TAG, "Sending new project to server...");
+            String id = intent.getStringExtra(Constants.EXTRA_PROJECT_ID);
+            try {
+                projects.remove(id);
+                refreshCollection(Constants.PROJECTS);
+            } catch (Exception e) {
+                Log.d(TAG, "Couldn't delete project ID " + id);
+            }
+        } else if (Constants.ACTION_POST_TAG.equals(action)) {
+            Log.d(TAG, "Sending new tag to server...");
+            Tag tag = intent.getParcelableExtra(Constants.EXTRA_TAG);
+            try {
+                tags.save(tag);
+                refreshCollection(Constants.TAGS);
+            } catch (Exception e) {
+                Log.d(TAG, "Couldn't post new tag");
+            }
+        } else if (Constants.ACTION_DELETE_TAG.equals(action)) {
+            Log.d(TAG, "Sending new tag to server...");
+            String id = intent.getStringExtra(Constants.EXTRA_TAG_ID);
+            try {
+                tags.remove(id);
+                refreshCollection(Constants.TAGS);
+            } catch (Exception e) {
+                Log.d(TAG, "Couldn't delete tag ID " + id);
             }
         }
     }
@@ -105,17 +142,4 @@ public class ToDoAPIService extends IntentService {
         sendBroadcast(new Intent(Constants.ACTION_REFRESH_COLLECTIONS));
     }
 
-    private void postTask(Task task) throws Exception {
-        // Use the Pipe to save a new Task to the backend
-        tasks.save(task);
-
-        // And refresh our list to pick up the new one
-        refreshCollection(Constants.TASKS);
-    }
-
-    private void deleteTask(String id) throws Exception {
-        tasks.remove(id);
-
-        refreshCollection(Constants.TASKS);
-    }
 }
