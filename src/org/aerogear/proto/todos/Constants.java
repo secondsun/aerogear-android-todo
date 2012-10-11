@@ -36,4 +36,9 @@ public class Constants {
     public static final String ACTION_DELETE_PROJECT = "org.aerogear.action.delete_project";
     public static final String EXTRA_PROJECT = "org.aerogear.extras.project";
     public static final String EXTRA_PROJECT_ID = "org.aerogear.extras.project_id";
+    
+    public static final String ACTION_POST_TAG = "org.aerogear.actions.post_tag";
+    public static final String ACTION_DELETE_TAG = "org.aerogear.action.delete_tag";
+    public static final String EXTRA_TAG = "org.aerogear.extras.tag";
+    public static final String EXTRA_TAG_ID = "org.aerogear.extras.tag_id";
 }

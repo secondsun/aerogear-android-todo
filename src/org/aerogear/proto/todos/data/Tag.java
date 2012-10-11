@@ -17,7 +17,10 @@
 
 package org.aerogear.proto.todos.data;
 
-public class Tag {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Tag implements Parcelable {
     private String id;
     private String title;
 
@@ -41,4 +44,44 @@ public class Tag {
     public String toString() {
         return title;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Tag tag = (Tag) o;
+        if (title != null ? !title.equals(tag.title) : tag.title != null) return false;
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return title != null ? title.hashCode() : 0;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int flags) {
+        parcel.writeString(id);
+        parcel.writeString(title);
+    }
+
+    public static final Parcelable.Creator<Tag> CREATOR = new Parcelable.Creator<Tag>() {
+        @Override
+        public Tag createFromParcel(Parcel parcel) {
+            Tag tag = new Tag();
+            tag.id = parcel.readString();
+            tag.title = parcel.readString();
+            return tag;
+        }
+
+        @Override
+        public Tag[] newArray(int size) {
+            return new Tag[size];
+        }
+    };
 }

@@ -106,7 +106,25 @@ public class ToDoAPIService extends IntentService {
                 projects.remove(id);
                 refreshCollection(Constants.PROJECTS);
             } catch (Exception e) {
-                Log.d(TAG, "Couldn't delete task ID " + id);
+                Log.d(TAG, "Couldn't delete project ID " + id);
+            }
+        } else if (Constants.ACTION_POST_TAG.equals(action)) {
+            Log.d(TAG, "Sending new tag to server...");
+            Tag tag = intent.getParcelableExtra(Constants.EXTRA_TAG);
+            try {
+                tags.save(tag);
+                refreshCollection(Constants.TAGS);
+            } catch (Exception e) {
+                Log.d(TAG, "Couldn't post new tag");
+            }
+        } else if (Constants.ACTION_DELETE_TAG.equals(action)) {
+            Log.d(TAG, "Sending new tag to server...");
+            String id = intent.getStringExtra(Constants.EXTRA_TAG_ID);
+            try {
+                tags.remove(id);
+                refreshCollection(Constants.TAGS);
+            } catch (Exception e) {
+                Log.d(TAG, "Couldn't delete tag ID " + id);
             }
         }
     }
