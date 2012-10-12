@@ -19,7 +19,6 @@ package org.aerogear.proto.todos.fragments;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,19 +28,22 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import org.aerogear.proto.todos.Constants;
+import android.widget.Toast;
+import com.actionbarsherlock.app.SherlockFragment;
+import org.aerogear.android.Callback;
+import org.aerogear.android.pipeline.Pipe;
 import org.aerogear.proto.todos.R;
+import org.aerogear.proto.todos.ToDoApplication;
 import org.aerogear.proto.todos.activities.MainActivity;
 import org.aerogear.proto.todos.data.Task;
-import org.aerogear.proto.todos.services.ToDoAPIService;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TaskListFragment extends ListBaseFragment {
-    // TODO: Sharing this via static fields isn't great.
-    // TODO: Move to Parcelables (which can go in the broadcast) or local DB/ContentProvider (persistent caching)
-    public static List<Task> tasks = new ArrayList<Task>();
+public class TaskListFragment extends SherlockFragment {
+    private ArrayAdapter<Task> adapter;
+    private List<Task> tasks = new ArrayList<Task>();
+    private Pipe<Task> pipe;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -93,15 +95,46 @@ public class TaskListFragment extends ListBaseFragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        pipe = ((ToDoApplication)getActivity().getApplication()).getPipeline().get("tasks");
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
-        startRefresh(Constants.TASKS);
+        startRefresh();
+    }
+
+    public void startRefresh() {
+        pipe.getAll(tasks, new Callback<List<Task>>() {
+            @Override
+            public void onSuccess(List<Task> data) {
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Toast.makeText(getActivity(),
+                               "Error refreshing tasks: " + e.getMessage(),
+                               Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     private void startDelete(Task task) {
-        Intent intent = new Intent(getActivity(), ToDoAPIService.class);
-        intent.setAction(Constants.ACTION_DELETE_TASK);
-        intent.putExtra(Constants.EXTRA_TASK_ID, task.getId());
-        getActivity().startService(intent);
+        pipe.remove(task.getId(), new Callback<Void>() {
+            @Override
+            public void onSuccess(Void data) {
+                startRefresh();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Toast.makeText(getActivity(),
+                               "Error removing task: " + e.getMessage(),
+                               Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

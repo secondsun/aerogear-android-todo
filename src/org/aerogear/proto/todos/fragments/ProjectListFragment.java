@@ -19,24 +19,31 @@ package org.aerogear.proto.todos.fragments;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
-import org.aerogear.proto.todos.Constants;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+import com.actionbarsherlock.app.SherlockFragment;
+import org.aerogear.android.Callback;
+import org.aerogear.android.pipeline.Pipe;
 import org.aerogear.proto.todos.R;
+import org.aerogear.proto.todos.ToDoApplication;
 import org.aerogear.proto.todos.activities.MainActivity;
 import org.aerogear.proto.todos.data.Project;
-import org.aerogear.proto.todos.data.Task;
-import org.aerogear.proto.todos.services.ToDoAPIService;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProjectListFragment extends ListBaseFragment {
-    public static List<Project> projects = new ArrayList<Project>();
+public class ProjectListFragment extends SherlockFragment {
+    private ArrayAdapter<Project> adapter;
+    private List<Project> projects = new ArrayList<Project>();
+    private Pipe<Project> pipe;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -87,15 +94,46 @@ public class ProjectListFragment extends ListBaseFragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        pipe = ((ToDoApplication)getActivity().getApplication()).getPipeline().get("projects");
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
-        startRefresh(Constants.PROJECTS);
+        startRefresh();
+    }
+
+    public void startRefresh() {
+        pipe.getAll(projects, new Callback<List<Project>>() {
+            @Override
+            public void onSuccess(List<Project> data) {
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Toast.makeText(getActivity(),
+                               "Error refreshing projects: " + e.getMessage(),
+                               Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     private void startDelete(Project project) {
-        Intent intent = new Intent(getActivity(), ToDoAPIService.class);
-        intent.setAction(Constants.ACTION_DELETE_PROJECT);
-        intent.putExtra(Constants.EXTRA_PROJECT_ID, project.getId());
-        getActivity().startService(intent);
+        pipe.remove(project.getId(), new Callback<Void>() {
+            @Override
+            public void onSuccess(Void data) {
+                startRefresh();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Toast.makeText(getActivity(),
+                               "Error removing project: " + e.getMessage(),
+                               Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

@@ -17,7 +17,6 @@
 
 package org.aerogear.proto.todos.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -26,11 +25,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import org.aerogear.proto.todos.Constants;
+import android.widget.Toast;
+import org.aerogear.android.Callback;
+import org.aerogear.android.pipeline.Pipe;
 import org.aerogear.proto.todos.R;
+import org.aerogear.proto.todos.ToDoApplication;
 import org.aerogear.proto.todos.activities.MainActivity;
 import org.aerogear.proto.todos.data.Tag;
-import org.aerogear.proto.todos.services.ToDoAPIService;
 
 public class TagFormFragment extends Fragment {
 
@@ -72,11 +73,20 @@ public class TagFormFragment extends Fragment {
 
                 tag.setTitle(name.getText().toString());
 
-                Intent intent = new Intent(getActivity(), ToDoAPIService.class);
-                intent.setAction(Constants.ACTION_POST_TAG);
-                intent.putExtra(Constants.EXTRA_TAG, tag);
-                getActivity().startService(intent);
-                ((MainActivity) getActivity()).showTagList();
+                Pipe<Tag> pipe = ((ToDoApplication)getActivity().getApplication()).getPipeline().get("tags");
+                pipe.save(tag, new Callback<Tag>() {
+                    @Override
+                    public void onSuccess(Tag data) {
+                        ((MainActivity)getActivity()).showTagList();
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Toast.makeText(getActivity(),
+                                       "Error saving tag: " + e.getMessage(),
+                                       Toast.LENGTH_LONG).show();
+                    }
+                });
             }
         });
 

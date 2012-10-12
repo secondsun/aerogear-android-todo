@@ -18,10 +18,26 @@
 package org.aerogear.proto.todos;
 
 import android.app.Application;
+import org.aerogear.android.pipeline.Pipeline;
+import org.aerogear.proto.todos.data.Project;
+import org.aerogear.proto.todos.data.Tag;
+import org.aerogear.proto.todos.data.Task;
 
 public class ToDoApplication extends Application {
+    private Pipeline pipeline;
+
     @Override
     public void onCreate() {
         super.onCreate();
+
+        // Set up Pipeline
+        pipeline  = new Pipeline(Constants.ROOT_URL);
+        pipeline.add("tasks", Task[].class);
+        pipeline.add("tags", Tag[].class);
+        pipeline.add("projects", Project[].class);
+    }
+
+    public Pipeline getPipeline() {
+        return pipeline;
     }
 }

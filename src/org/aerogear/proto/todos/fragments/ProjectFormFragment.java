@@ -17,18 +17,21 @@
 
 package org.aerogear.proto.todos.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
-import org.aerogear.proto.todos.Constants;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+import org.aerogear.android.Callback;
+import org.aerogear.android.pipeline.Pipe;
 import org.aerogear.proto.todos.R;
+import org.aerogear.proto.todos.ToDoApplication;
 import org.aerogear.proto.todos.activities.MainActivity;
 import org.aerogear.proto.todos.data.Project;
-import org.aerogear.proto.todos.services.ToDoAPIService;
 
 public class ProjectFormFragment extends Fragment {
 
@@ -70,11 +73,20 @@ public class ProjectFormFragment extends Fragment {
 
                 project.setTitle(name.getText().toString());
 
-                Intent intent = new Intent(getActivity(), ToDoAPIService.class);
-                intent.setAction(Constants.ACTION_POST_PROJECT);
-                intent.putExtra(Constants.EXTRA_PROJECT, project);
-                getActivity().startService(intent);
-                ((MainActivity) getActivity()).showProjectList();
+                Pipe<Project> pipe = ((ToDoApplication)getActivity().getApplication()).getPipeline().get("projects");
+                pipe.save(project, new Callback<Project>() {
+                    @Override
+                    public void onSuccess(Project data) {
+                        ((MainActivity)getActivity()).showProjectList();
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Toast.makeText(getActivity(),
+                                       "Error saving project: " + e.getMessage(),
+                                       Toast.LENGTH_LONG).show();
+                    }
+                });
             }
         });
 
