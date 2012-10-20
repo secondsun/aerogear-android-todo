@@ -137,7 +137,6 @@ public class MainActivity extends SherlockFragmentActivity {
             fragmentTransaction.replace(tabletFragmentId, fragment);
         } else {
             fragmentTransaction.replace(R.id.todo, fragment);
-            fragmentTransaction.addToBackStack(null);
         }
         fragmentTransaction.commit();
     }
