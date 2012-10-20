@@ -30,7 +30,7 @@ import org.aerogear.android.Callback;
 import org.aerogear.android.pipeline.Pipe;
 import org.aerogear.proto.todos.R;
 import org.aerogear.proto.todos.ToDoApplication;
-import org.aerogear.proto.todos.activities.MainActivity;
+import org.aerogear.proto.todos.activities.TodoActivity;
 import org.aerogear.proto.todos.data.Project;
 
 public class ProjectFormFragment extends Fragment {
@@ -77,7 +77,7 @@ public class ProjectFormFragment extends Fragment {
                 pipe.save(project, new Callback<Project>() {
                     @Override
                     public void onSuccess(Project data) {
-                        ((MainActivity)getActivity()).showProjectList();
+                        ((TodoActivity)getActivity()).showProjectList();
                     }
 
                     @Override
@@ -93,7 +93,7 @@ public class ProjectFormFragment extends Fragment {
         buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity) getActivity()).showProjectList();
+                ((TodoActivity) getActivity()).showProjectList();
             }
         });
 

@@ -30,7 +30,7 @@ import org.aerogear.android.Callback;
 import org.aerogear.android.pipeline.Pipe;
 import org.aerogear.proto.todos.R;
 import org.aerogear.proto.todos.ToDoApplication;
-import org.aerogear.proto.todos.activities.MainActivity;
+import org.aerogear.proto.todos.activities.TodoActivity;
 import org.aerogear.proto.todos.data.Tag;
 
 public class TagFormFragment extends Fragment {
@@ -77,7 +77,7 @@ public class TagFormFragment extends Fragment {
                 pipe.save(tag, new Callback<Tag>() {
                     @Override
                     public void onSuccess(Tag data) {
-                        ((MainActivity)getActivity()).showTagList();
+                        ((TodoActivity)getActivity()).showTagList();
                     }
 
                     @Override
@@ -93,7 +93,7 @@ public class TagFormFragment extends Fragment {
         buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity) getActivity()).showTagList();
+                ((TodoActivity) getActivity()).showTagList();
             }
         });
 

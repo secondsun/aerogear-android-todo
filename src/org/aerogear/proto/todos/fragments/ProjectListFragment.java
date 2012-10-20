@@ -34,7 +34,7 @@ import org.aerogear.android.Callback;
 import org.aerogear.android.pipeline.Pipe;
 import org.aerogear.proto.todos.R;
 import org.aerogear.proto.todos.ToDoApplication;
-import org.aerogear.proto.todos.activities.MainActivity;
+import org.aerogear.proto.todos.activities.TodoActivity;
 import org.aerogear.proto.todos.data.Project;
 
 import java.util.ArrayList;
@@ -56,7 +56,7 @@ public class ProjectListFragment extends SherlockFragment {
         ImageView add = (ImageView) view.findViewById(R.id.add);
         add.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                ((MainActivity) getActivity()).showProjectForm();
+                ((TodoActivity) getActivity()).showProjectForm();
             }
         });
 
@@ -67,7 +67,7 @@ public class ProjectListFragment extends SherlockFragment {
         projectListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                 final Project project = projects.get(position);
-                ((MainActivity) getActivity()).showProjectForm(project);
+                ((TodoActivity) getActivity()).showProjectForm(project);
             }
         });
 

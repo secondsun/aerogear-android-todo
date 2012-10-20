@@ -37,7 +37,7 @@ import org.aerogear.proto.todos.fragments.TaskListFragment;
 /**
  * @author <a href="mailto:marko.strukelj@gmail.com">Marko Strukelj</a>
  */
-public class MainActivity extends SherlockFragmentActivity {
+public class TodoActivity extends SherlockFragmentActivity {
     private FragmentTransaction fragmentTransaction;
 
     @Override
