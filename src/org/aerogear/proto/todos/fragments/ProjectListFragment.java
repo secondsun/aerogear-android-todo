@@ -106,9 +106,11 @@ public class ProjectListFragment extends SherlockFragment {
     }
 
     public void startRefresh() {
-        pipe.getAll(projects, new Callback<List<Project>>() {
+        pipe.read( new Callback<List<Project>>() {
             @Override
             public void onSuccess(List<Project> data) {
+                projects.clear();
+                projects.addAll(data);
                 adapter.notifyDataSetChanged();
             }
 
