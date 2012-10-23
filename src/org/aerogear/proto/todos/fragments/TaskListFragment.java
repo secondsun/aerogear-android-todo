@@ -108,7 +108,8 @@ public class TaskListFragment extends SherlockFragment {
     }
 
     public void startRefresh() {
-        pipe.read(new Callback<List<Task>>() {
+        pipe.read( new Callback<List<Task>>() {
+
             @Override
             public void onSuccess(List<Task> data) {
                 tasks.clear();
