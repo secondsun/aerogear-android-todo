@@ -19,20 +19,25 @@ package org.aerogear.proto.todos.fragments;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockDialogFragment;
-import org.aerogear.proto.todos.Constants;
+import org.aerogear.android.Callback;
+import org.aerogear.android.pipeline.Pipe;
 import org.aerogear.proto.todos.R;
+import org.aerogear.proto.todos.ToDoApplication;
 import org.aerogear.proto.todos.activities.MainActivity;
 import org.aerogear.proto.todos.data.Task;
-import org.aerogear.proto.todos.services.ToDoAPIService;
 
 import java.util.Calendar;
 import java.util.regex.Pattern;
@@ -94,11 +99,20 @@ public class TaskFormFragment extends Fragment {
                 task.setDate(date.getText().toString());
                 task.setDescription(description.getText().toString());
 
-                Intent intent = new Intent(getActivity(), ToDoAPIService.class);
-                intent.setAction(Constants.ACTION_POST_TASK);
-                intent.putExtra(Constants.EXTRA_TASK, task);
-                getActivity().startService(intent);
-                ((MainActivity) getActivity()).showTaskList();
+                Pipe<Task> pipe = ((ToDoApplication)getActivity().getApplication()).getPipeline().get("tasks");
+                pipe.save(task, new Callback<Task>() {
+                    @Override
+                    public void onSuccess(Task data) {
+                        ((MainActivity)getActivity()).showTaskList();
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Toast.makeText(getActivity(),
+                                       "Error saving task: " + e.getMessage(),
+                                       Toast.LENGTH_LONG).show();
+                    }
+                });
             }
         });
 
