@@ -106,9 +106,11 @@ public class TagListFragment extends SherlockFragment {
     }
 
     private void startRefresh() {
-        pipe.getAll(tags, new Callback<List<Tag>>() {
+        pipe.read(new Callback<List<Tag>>() {
             @Override
             public void onSuccess(List<Tag> data) {
+                tags.clear();
+                tags.addAll(data);
                 adapter.notifyDataSetChanged();
             }
 
