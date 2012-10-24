@@ -31,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockFragment;
 import org.aerogear.android.Callback;
+
 import org.aerogear.android.pipeline.Pipe;
 import org.aerogear.proto.todos.R;
 import org.aerogear.proto.todos.ToDoApplication;
@@ -107,7 +108,7 @@ public class TaskListFragment extends SherlockFragment {
     }
 
     public void startRefresh() {
-        pipe.read( new Callback<List<Task>>() {
+        pipe.read(new Callback<List<Task>>() {
             @Override
             public void onSuccess(List<Task> data) {
                 tasks.clear();
@@ -118,8 +119,8 @@ public class TaskListFragment extends SherlockFragment {
             @Override
             public void onFailure(Exception e) {
                 Toast.makeText(getActivity(),
-                               "Error refreshing tasks: " + e.getMessage(),
-                               Toast.LENGTH_LONG).show();
+                        "Error refreshing tasks: " + e.getMessage(),
+                        Toast.LENGTH_LONG).show();
             }
         });
     }

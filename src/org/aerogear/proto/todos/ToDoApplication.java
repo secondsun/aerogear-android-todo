@@ -18,7 +18,7 @@
 package org.aerogear.proto.todos;
 
 import android.app.Application;
-import org.aerogear.android.pipeline.Pipeline;
+import org.aerogear.android.Pipeline;
 import org.aerogear.proto.todos.data.Project;
 import org.aerogear.proto.todos.data.Tag;
 import org.aerogear.proto.todos.data.Task;
