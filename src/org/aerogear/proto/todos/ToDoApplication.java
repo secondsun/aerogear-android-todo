@@ -32,9 +32,9 @@ public class ToDoApplication extends Application {
 
         // Set up Pipeline
         pipeline  = new Pipeline(Constants.ROOT_URL);
-        pipeline.add("tasks", Task[].class);
-        pipeline.add("tags", Tag[].class);
-        pipeline.add("projects", Project[].class);
+        pipeline.add("tasks", Task.class);
+        pipeline.add("tags", Tag.class);
+        pipeline.add("projects", Project.class);
     }
 
     public Pipeline getPipeline() {
