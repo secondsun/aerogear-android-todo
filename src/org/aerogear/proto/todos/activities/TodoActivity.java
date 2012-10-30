@@ -23,7 +23,10 @@ import android.support.v4.app.FragmentTransaction;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+
+import org.aerogear.android.Callback;
 import org.aerogear.proto.todos.R;
+import org.aerogear.proto.todos.ToDoApplication;
 import org.aerogear.proto.todos.data.Project;
 import org.aerogear.proto.todos.data.Tag;
 import org.aerogear.proto.todos.data.Task;
@@ -69,12 +72,13 @@ public class TodoActivity extends SherlockFragmentActivity {
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
-        getSupportMenuInflater().inflate(R.menu.todo, menu);
+        if(!isTablet()) { 
+        	getSupportMenuInflater().inflate(R.menu.todo, menu);
+        }
+        else {
+        	getSupportMenuInflater().inflate(R.menu.logout, menu);
+        }
         return super.onCreateOptionsMenu(menu);
-    }
-
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        return !isTablet();
     }
 
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
@@ -88,6 +92,20 @@ public class TodoActivity extends SherlockFragmentActivity {
             case R.id.menu_item_task:
                 showTaskList();
                 break;
+            case R.id.menu_logout:
+            	((ToDoApplication)getApplication()).logout(new Callback<Void>() {
+
+					@Override
+					public void onSuccess(Void data) {
+						finish();
+					}
+
+					@Override
+					public void onFailure(Exception e) {
+						finish();
+					}
+				});
+            	break;
         }
         return super.onMenuItemSelected(featureId, item);
     }

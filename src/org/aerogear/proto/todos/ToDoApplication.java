@@ -17,25 +17,36 @@
 
 package org.aerogear.proto.todos;
 
-import android.app.Application;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.HashMap;
+
+import org.aerogear.android.Callback;
 import org.aerogear.android.Pipeline;
 import org.aerogear.android.impl.pipeline.PipeConfig;
+import org.aerogear.android.authentication.AuthType;
+import org.aerogear.android.authentication.AuthenticationModule;
+import org.aerogear.android.authentication.Authenticator;
+import org.aerogear.android.authentication.impl.DefaultAuthenticator;
+import org.aerogear.android.core.HeaderAndBodyMap;
+
 import org.aerogear.proto.todos.data.Project;
 import org.aerogear.proto.todos.data.Tag;
 import org.aerogear.proto.todos.data.Task;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import android.app.Application;
 
 public class ToDoApplication extends Application {
+	private Pipeline pipeline;
 
-    private Pipeline pipeline;
+	private AuthenticationModule authModule;
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
+	@Override
+	public void onCreate() {
+		super.onCreate();
 
-        try {
+		// Set up Pipeline
+		try {
             URL baseURL = new URL("http://todo-aerogear.rhcloud.com/todo-server");
 
             // Set up Pipeline
@@ -59,9 +70,56 @@ public class ToDoApplication extends Application {
             // TODO Logger?
         }
 
-    }
+		Authenticator auth = new DefaultAuthenticator();
 
-    public Pipeline getPipeline() {
-        return pipeline;
-    }
+		try {
+
+			authModule = auth.auth(AuthType.REST, new URL(Constants.ROOT_URL))
+					.add("login");
+
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+
+		pipeline.add("tasks", Task.class).setAuthenticationModule(authModule);
+		pipeline.add("tags", Tag.class).setAuthenticationModule(authModule);
+		pipeline.add("projects", Project.class).setAuthenticationModule(
+				authModule);
+
+	}
+
+	public Pipeline getPipeline() {
+		return pipeline;
+	}
+
+	public AuthenticationModule getAuthenticationModule() {
+		return authModule;
+	}
+
+	public void login(String username, String password, Callback<HeaderAndBodyMap> callback) {
+		authModule.login(username, password, callback);
+
+		
+	}
+
+	public void logout(Callback<Void> callback) {
+		authModule.logout(callback);
+	}
+
+	public void enroll(String firstName, String lastName, String emailAddress,
+			String username, String password, String role,
+			Callback<HeaderAndBodyMap> callback) {
+		
+		HashMap<String, String> userData = new HashMap<String, String>();
+		userData.put("firstname", firstName);
+		userData.put("lastname", lastName);
+		userData.put("email", emailAddress);
+		userData.put("username", username);
+		userData.put("password", password);
+		userData.put("role", role);
+		
+		authModule.enroll(userData, callback);
+	}
+
 }
