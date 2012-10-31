@@ -1,27 +1,24 @@
 package org.aerogear.proto.todos;
 
-import org.aerogear.proto.todos.R;
-import org.aerogear.proto.todos.R.layout;
-import org.aerogear.proto.todos.R.menu;
-
 import android.os.Bundle;
-import android.app.Activity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
 
-public class RegisterActivity extends Activity {
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+
+public class RegisterActivity extends SherlockActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_register, menu);
+        getSupportMenuInflater().inflate(R.menu.activity_register, menu);
         return true;
     }
 

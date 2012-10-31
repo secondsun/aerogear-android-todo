@@ -28,8 +28,7 @@ import org.aerogear.android.authentication.AuthType;
 import org.aerogear.android.authentication.AuthenticationModule;
 import org.aerogear.android.authentication.Authenticator;
 import org.aerogear.android.authentication.impl.DefaultAuthenticator;
-import org.aerogear.android.core.HeaderAndBodyMap;
-
+import org.aerogear.android.core.HeaderAndBody;
 import org.aerogear.proto.todos.data.Project;
 import org.aerogear.proto.todos.data.Tag;
 import org.aerogear.proto.todos.data.Task;
@@ -97,7 +96,7 @@ public class ToDoApplication extends Application {
 		return authModule;
 	}
 
-	public void login(String username, String password, Callback<HeaderAndBodyMap> callback) {
+	public void login(String username, String password, Callback<HeaderAndBody> callback) {
 		authModule.login(username, password, callback);
 
 		
@@ -109,7 +108,7 @@ public class ToDoApplication extends Application {
 
 	public void enroll(String firstName, String lastName, String emailAddress,
 			String username, String password, String role,
-			Callback<HeaderAndBodyMap> callback) {
+			Callback<HeaderAndBody> callback) {
 		
 		HashMap<String, String> userData = new HashMap<String, String>();
 		userData.put("firstname", firstName);

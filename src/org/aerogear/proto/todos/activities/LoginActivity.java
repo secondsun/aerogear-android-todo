@@ -3,7 +3,7 @@ package org.aerogear.proto.todos.activities;
 import java.io.UnsupportedEncodingException;
 
 import org.aerogear.android.Callback;
-import org.aerogear.android.core.HeaderAndBodyMap;
+import org.aerogear.android.core.HeaderAndBody;
 import org.aerogear.android.core.HttpException;
 import org.aerogear.proto.todos.R;
 import org.aerogear.proto.todos.ToDoApplication;
@@ -44,10 +44,10 @@ public class LoginActivity extends Activity {
 		String username = text(R.id.username_field);
 		String password = text(R.id.password_field);
 		ToDoApplication app = (ToDoApplication)getApplication();
-		app.login(username, password, new Callback<HeaderAndBodyMap>() {
+		app.login(username, password, new Callback<HeaderAndBody>() {
 
 			@Override
-			public void onSuccess(HeaderAndBodyMap data) {
+			public void onSuccess(HeaderAndBody data) {
 				startActivity(new Intent(getApplicationContext(), MainActivity.class));
 			}
 
