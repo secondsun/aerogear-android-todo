@@ -36,7 +36,7 @@ import org.aerogear.android.Callback;
 import org.aerogear.android.pipeline.Pipe;
 import org.aerogear.proto.todos.R;
 import org.aerogear.proto.todos.ToDoApplication;
-import org.aerogear.proto.todos.activities.MainActivity;
+import org.aerogear.proto.todos.activities.TodoActivity;
 import org.aerogear.proto.todos.data.Task;
 
 import java.util.Calendar;
@@ -103,7 +103,7 @@ public class TaskFormFragment extends Fragment {
                 pipe.save(task, new Callback<Task>() {
                     @Override
                     public void onSuccess(Task data) {
-                        ((MainActivity)getActivity()).showTaskList();
+                        ((TodoActivity)getActivity()).showTaskList();
                     }
 
                     @Override
@@ -120,7 +120,7 @@ public class TaskFormFragment extends Fragment {
         buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity) getActivity()).showTaskList();
+                ((TodoActivity) getActivity()).showTaskList();
             }
         });
 

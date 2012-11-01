@@ -24,6 +24,8 @@ import org.aerogear.proto.todos.data.Tag;
 import org.aerogear.proto.todos.data.Task;
 
 public class ToDoApplication extends Application {
+
+    private final String ROOT_URL = "http://todo-aerogear.rhcloud.com/todo-server";
     private Pipeline pipeline;
 
     @Override
@@ -31,10 +33,11 @@ public class ToDoApplication extends Application {
         super.onCreate();
 
         // Set up Pipeline
-        pipeline  = new Pipeline(Constants.ROOT_URL);
-        pipeline.add("tasks", Task.class);
-        pipeline.add("tags", Tag.class);
-        pipeline.add("projects", Project.class);
+        pipeline  = new Pipeline(ROOT_URL);
+        pipeline.pipe().name("tasks").useClass(Task.class).buildAndAdd();
+        pipeline.pipe().name("tags").useClass(Tag.class).buildAndAdd();
+        pipeline.pipe().name("projects").useClass(Project.class).buildAndAdd();
+
     }
 
     public Pipeline getPipeline() {
