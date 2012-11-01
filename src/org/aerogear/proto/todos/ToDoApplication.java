@@ -34,8 +34,8 @@ public class ToDoApplication extends Application {
 
         // Set up Pipeline
         pipeline  = new Pipeline(ROOT_URL);
-        pipeline.pipe().name("tasks").useClass(Task.class);
-        pipeline.pipe().name("tags").useClass(Tag.class);
+        pipeline.pipe().name("tasks").useClass(Task.class).buildAndAdd();
+        pipeline.pipe().name("tags").useClass(Tag.class).buildAndAdd();
         pipeline.pipe().name("projects").useClass(Project.class).buildAndAdd();
 
     }
