@@ -19,24 +19,45 @@ package org.aerogear.proto.todos;
 
 import android.app.Application;
 import org.aerogear.android.Pipeline;
+import org.aerogear.android.impl.pipeline.PipeConfig;
 import org.aerogear.proto.todos.data.Project;
 import org.aerogear.proto.todos.data.Tag;
 import org.aerogear.proto.todos.data.Task;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 public class ToDoApplication extends Application {
 
-    private final String ROOT_URL = "http://todo-aerogear.rhcloud.com/todo-server";
     private Pipeline pipeline;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        // Set up Pipeline
-        pipeline  = new Pipeline(ROOT_URL);
-        pipeline.pipe().name("tasks").useClass(Task.class).buildAndAdd();
-        pipeline.pipe().name("tags").useClass(Tag.class).buildAndAdd();
-        pipeline.pipe().name("projects").useClass(Project.class).buildAndAdd();
+        try {
+            URL baseURL = new URL("http://todo-aerogear.rhcloud.com/todo-server");
+
+            // Set up Pipeline
+            pipeline  = new Pipeline(baseURL);
+
+            PipeConfig pipeConfigTask = new PipeConfig(baseURL, Task.class);
+            pipeConfigTask.setName("tasks");
+            pipeConfigTask.setEndpoint("tasks");
+            pipeline.pipe(Task.class, pipeConfigTask);
+
+            PipeConfig pipeConfigTag = new PipeConfig(baseURL, Tag.class);
+            pipeConfigTag.setName("tags");
+            pipeConfigTag.setEndpoint("tags");
+            pipeline.pipe(Tag.class, pipeConfigTag);
+
+            PipeConfig pipeConfigProject = new PipeConfig(baseURL, Project.class);
+            pipeConfigProject.setName("projects");
+            pipeConfigProject.setEndpoint("projects");
+            pipeline.pipe(Project.class, pipeConfigProject);
+        } catch (MalformedURLException e) {
+            // TODO Logger?
+        }
 
     }
 
