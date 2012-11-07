@@ -48,7 +48,7 @@ public class LoginActivity extends Activity {
 
 			@Override
 			public void onSuccess(HeaderAndBody data) {
-				startActivity(new Intent(getApplicationContext(), MainActivity.class));
+				startActivity(new Intent(getApplicationContext(), TodoActivity.class));
 			}
 
 			@Override

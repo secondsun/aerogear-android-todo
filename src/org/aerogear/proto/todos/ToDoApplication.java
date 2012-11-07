@@ -46,7 +46,11 @@ public class ToDoApplication extends Application {
 
 		// Set up Pipeline
 		try {
-            URL baseURL = new URL("http://todo-aerogear.rhcloud.com/todo-server");
+            URL baseURL = new URL("http://todoauth-aerogear.rhcloud.com/todo-server");
+    		Authenticator auth = new DefaultAuthenticator();
+
+    		authModule = auth.auth(AuthType.REST, baseURL)
+    					.add("login");
 
             // Set up Pipeline
             pipeline  = new Pipeline(baseURL);
@@ -54,37 +58,26 @@ public class ToDoApplication extends Application {
             PipeConfig pipeConfigTask = new PipeConfig(baseURL, Task.class);
             pipeConfigTask.setName("tasks");
             pipeConfigTask.setEndpoint("tasks");
+            pipeConfigTask.setAuthModule(authModule);
             pipeline.pipe(Task.class, pipeConfigTask);
 
             PipeConfig pipeConfigTag = new PipeConfig(baseURL, Tag.class);
             pipeConfigTag.setName("tags");
             pipeConfigTag.setEndpoint("tags");
+            pipeConfigTag.setAuthModule(authModule);
             pipeline.pipe(Tag.class, pipeConfigTag);
 
             PipeConfig pipeConfigProject = new PipeConfig(baseURL, Project.class);
             pipeConfigProject.setName("projects");
             pipeConfigProject.setEndpoint("projects");
+            pipeConfigProject.setAuthModule(authModule);
             pipeline.pipe(Project.class, pipeConfigProject);
         } catch (MalformedURLException e) {
             // TODO Logger?
         }
 
-		Authenticator auth = new DefaultAuthenticator();
 
-		try {
 
-			authModule = auth.auth(AuthType.REST, new URL(Constants.ROOT_URL))
-					.add("login");
-
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		}
-
-		pipeline.add("tasks", Task.class).setAuthenticationModule(authModule);
-		pipeline.add("tags", Tag.class).setAuthenticationModule(authModule);
-		pipeline.add("projects", Project.class).setAuthenticationModule(
-				authModule);
 
 	}
 

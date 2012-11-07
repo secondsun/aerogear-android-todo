@@ -16,7 +16,7 @@
         android:label="@string/app_name"
         android:theme="@style/Theme.Sherlock" >
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".activities.TodoActivity"
             android:label="@string/app_name" >
         </activity>
         <activity

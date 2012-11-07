@@ -56,7 +56,7 @@ public class RegisterActivity extends SherlockActivity {
 
 				@Override
 				public void onSuccess(HeaderAndBody data) {
-					startActivity(new Intent(getApplicationContext(), MainActivity.class));
+					startActivity(new Intent(getApplicationContext(), TodoActivity.class));
 					finish();
 				}
 
