@@ -8,6 +8,7 @@ import org.aerogear.proto.todos.ToDoApplication;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -19,7 +20,9 @@ import com.actionbarsherlock.view.MenuItem;
 
 public class RegisterActivity extends SherlockActivity {
 
-    @Override
+    protected static final String TAG = "RegisterActivity";
+
+	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
@@ -62,6 +65,7 @@ public class RegisterActivity extends SherlockActivity {
 
 				@Override
 				public void onFailure(Exception e) {
+					Log.e(TAG, "There was an error enrolling", e);
 					Toast.makeText(getApplicationContext(), "There was an error enrolling", Toast.LENGTH_LONG).show();
 				}} );
     		

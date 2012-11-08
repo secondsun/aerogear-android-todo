@@ -49,7 +49,7 @@ public class ToDoApplication extends Application {
             URL baseURL = new URL("http://todoauth-aerogear.rhcloud.com/todo-server");
     		Authenticator auth = new DefaultAuthenticator();
 
-    		authModule = auth.auth(AuthType.REST, baseURL)
+    		authModule = auth.auth(AuthType.REST, baseURL).enrollEndpoint("/auth/register")
     					.add("login");
 
             // Set up Pipeline
