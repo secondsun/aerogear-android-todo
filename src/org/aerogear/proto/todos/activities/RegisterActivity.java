@@ -31,7 +31,6 @@ public class RegisterActivity extends SherlockActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getSupportMenuInflater().inflate(R.menu.register, menu);
         return true;
     }
 
