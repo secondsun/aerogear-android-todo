@@ -25,13 +25,13 @@ public class RegisterActivity extends SherlockActivity {
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.register);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getSupportMenuInflater().inflate(R.menu.activity_register, menu);
+        getSupportMenuInflater().inflate(R.menu.register, menu);
         return true;
     }
 
