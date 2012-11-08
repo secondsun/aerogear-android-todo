@@ -13,7 +13,6 @@
     <string name="password">Password</string>
     <string name="update">Update</string>
     <string name="cancel">Cancel</string>
-    <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_login">Login</string>
     <string name="register"><u>Register</u></string>
@@ -30,6 +29,6 @@
         <item>simple</item>
         <item>admin</item>
     </string-array>
-        <string name="submit">Submit</string>
+    <string name="submit">Submit</string>
 
 </resources>

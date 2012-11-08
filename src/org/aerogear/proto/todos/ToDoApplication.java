@@ -85,10 +85,6 @@ public class ToDoApplication extends Application {
 		return pipeline;
 	}
 
-	public AuthenticationModule getAuthenticationModule() {
-		return authModule;
-	}
-
 	public void login(String username, String password, Callback<HeaderAndBody> callback) {
 		authModule.login(username, password, callback);
 

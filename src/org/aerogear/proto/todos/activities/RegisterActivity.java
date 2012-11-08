@@ -55,7 +55,13 @@ public class RegisterActivity extends SherlockActivity {
     		String password = text(R.id.password_field);
     		String role = ((Spinner)findViewById(R.id.role_spinner)).getSelectedItem().toString();
     		
-    		((ToDoApplication) getApplication()).enroll(firstName, lastName, emailAddress, username, password, role, new Callback<HeaderAndBody>(){
+    		((ToDoApplication) getApplication()).enroll(firstName, 
+    													lastName, 
+    													emailAddress, 
+    													username, 
+    													password, 
+    													role, 
+    													new Callback<HeaderAndBody>(){
 
 				@Override
 				public void onSuccess(HeaderAndBody data) {
