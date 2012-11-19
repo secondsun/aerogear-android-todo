@@ -23,12 +23,12 @@ import java.util.HashMap;
 
 import org.aerogear.android.Callback;
 import org.aerogear.android.Pipeline;
-import org.aerogear.android.impl.pipeline.PipeConfig;
 import org.aerogear.android.authentication.AuthType;
+import org.aerogear.android.authentication.AuthenticationConfig;
 import org.aerogear.android.authentication.AuthenticationModule;
-import org.aerogear.android.authentication.Authenticator;
-import org.aerogear.android.authentication.impl.DefaultAuthenticator;
+import org.aerogear.android.authentication.impl.Authenticator;
 import org.aerogear.android.core.HeaderAndBody;
+import org.aerogear.android.impl.pipeline.PipeConfig;
 import org.aerogear.proto.todos.data.Project;
 import org.aerogear.proto.todos.data.Tag;
 import org.aerogear.proto.todos.data.Task;
@@ -47,10 +47,11 @@ public class ToDoApplication extends Application {
 		// Set up Pipeline
 		try {
             URL baseURL = new URL("http://todoauth-aerogear.rhcloud.com/todo-server");
-    		Authenticator auth = new DefaultAuthenticator();
-
-    		authModule = auth.auth(AuthType.REST, baseURL).enrollEndpoint("/auth/register")
-    					.add("login");
+    		Authenticator auth = new Authenticator(baseURL);
+    		AuthenticationConfig config = new AuthenticationConfig();
+    		config.setEnrollEndpoint("/auth/register");
+    		
+    		authModule = auth.auth("login", config);
 
             // Set up Pipeline
             pipeline  = new Pipeline(baseURL);
