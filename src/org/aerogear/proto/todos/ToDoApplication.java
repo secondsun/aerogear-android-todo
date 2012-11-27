@@ -23,7 +23,6 @@ import java.util.HashMap;
 
 import org.aerogear.android.Callback;
 import org.aerogear.android.Pipeline;
-import org.aerogear.android.authentication.AuthType;
 import org.aerogear.android.authentication.AuthenticationConfig;
 import org.aerogear.android.authentication.AuthenticationModule;
 import org.aerogear.android.authentication.impl.Authenticator;
@@ -46,39 +45,38 @@ public class ToDoApplication extends Application {
 
 		// Set up Pipeline
 		try {
-            URL baseURL = new URL("http://todoauth-aerogear.rhcloud.com/todo-server");
-    		Authenticator auth = new Authenticator(baseURL);
-    		AuthenticationConfig config = new AuthenticationConfig();
-    		config.setEnrollEndpoint("/auth/register");
-    		
-    		authModule = auth.auth("login", config);
+			URL baseURL = new URL(
+					"http://todoauth-aerogear.rhcloud.com/todo-server");
+			Authenticator auth = new Authenticator(baseURL);
+			AuthenticationConfig config = new AuthenticationConfig();
+			config.setEnrollEndpoint("/auth/register");
 
-            // Set up Pipeline
-            pipeline  = new Pipeline(baseURL);
+			authModule = auth.auth("login", config);
 
-            PipeConfig pipeConfigTask = new PipeConfig(baseURL, Task.class);
-            pipeConfigTask.setName("tasks");
-            pipeConfigTask.setEndpoint("tasks");
-            pipeConfigTask.setAuthModule(authModule);
-            pipeline.pipe(Task.class, pipeConfigTask);
+			// Set up Pipelinejoh
+			pipeline = new Pipeline(baseURL);
 
-            PipeConfig pipeConfigTag = new PipeConfig(baseURL, Tag.class);
-            pipeConfigTag.setName("tags");
-            pipeConfigTag.setEndpoint("tags");
-            pipeConfigTag.setAuthModule(authModule);
-            pipeline.pipe(Tag.class, pipeConfigTag);
+			PipeConfig pipeConfigTask = new PipeConfig(baseURL, Task.class);
+			pipeConfigTask.setName("tasks");
+			pipeConfigTask.setEndpoint("tasks");
+			pipeConfigTask.setAuthModule(authModule);
+			pipeline.pipe(Task.class, pipeConfigTask);
 
-            PipeConfig pipeConfigProject = new PipeConfig(baseURL, Project.class);
-            pipeConfigProject.setName("projects");
-            pipeConfigProject.setEndpoint("projects");
-            pipeConfigProject.setAuthModule(authModule);
-            pipeline.pipe(Project.class, pipeConfigProject);
-        } catch (MalformedURLException e) {
-            // TODO Logger?
-        }
+			PipeConfig pipeConfigTag = new PipeConfig(baseURL, Tag.class);
+			pipeConfigTag.setName("tags");
+			pipeConfigTag.setEndpoint("tags");
+			pipeConfigTag.setAuthModule(authModule);
+			pipeline.pipe(Tag.class, pipeConfigTag);
 
-
-
+			PipeConfig pipeConfigProject = new PipeConfig(baseURL,
+					Project.class);
+			pipeConfigProject.setName("projects");
+			pipeConfigProject.setEndpoint("projects");
+			pipeConfigProject.setAuthModule(authModule);
+			pipeline.pipe(Project.class, pipeConfigProject);
+		} catch (MalformedURLException e) {
+			// TODO Logger?
+		}
 
 	}
 
@@ -86,10 +84,10 @@ public class ToDoApplication extends Application {
 		return pipeline;
 	}
 
-	public void login(String username, String password, Callback<HeaderAndBody> callback) {
+	public void login(String username, String password,
+			Callback<HeaderAndBody> callback) {
 		authModule.login(username, password, callback);
 
-		
 	}
 
 	public void logout(Callback<Void> callback) {
@@ -99,7 +97,7 @@ public class ToDoApplication extends Application {
 	public void enroll(String firstName, String lastName, String emailAddress,
 			String username, String password, String role,
 			Callback<HeaderAndBody> callback) {
-		
+
 		HashMap<String, String> userData = new HashMap<String, String>();
 		userData.put("firstname", firstName);
 		userData.put("lastname", lastName);
@@ -107,7 +105,7 @@ public class ToDoApplication extends Application {
 		userData.put("username", username);
 		userData.put("password", password);
 		userData.put("role", role);
-		
+
 		authModule.enroll(userData, callback);
 	}
 

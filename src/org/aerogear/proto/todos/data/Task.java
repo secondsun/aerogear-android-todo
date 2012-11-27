@@ -25,95 +25,97 @@ import android.os.Parcelable;
  */
 public class Task implements Parcelable {
 
-    private String id;
-    private String title;
-    private String date;
-    private String description;
+	private String id;
+	private String title;
+	private String date;
+	private String description;
 
-    public Task() {
-    }
+	public Task() {
+	}
 
-    public Task(String title) {
-        this.title = title;
-    }
+	public Task(String title) {
+		this.title = title;
+	}
 
-    public String getId() {
-        return id;
-    }
+	public String getId() {
+		return id;
+	}
 
-    public void setId(String id) {
-        this.id = id;
-    }
+	public void setId(String id) {
+		this.id = id;
+	}
 
-    public String getTitle() {
-        return title;
-    }
+	public String getTitle() {
+		return title;
+	}
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
-    public String getDate() {
-        return date;
-    }
+	public String getDate() {
+		return date;
+	}
 
-    public void setDate(String date) {
-        this.date = date;
-    }
+	public void setDate(String date) {
+		this.date = date;
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    @Override
-    public String toString() {
-        return title;
-    }
+	@Override
+	public String toString() {
+		return title;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || o.getClass() != getClass()) return false;
-        Task other = (Task)o;
-        if (title == null) return other.getTitle() == null;
-        return title.equals(other.getTitle());
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (o == null || o.getClass() != getClass())
+			return false;
+		Task other = (Task) o;
+		if (title == null)
+			return other.getTitle() == null;
+		return title.equals(other.getTitle());
+	}
 
-    @Override
-    public int hashCode() {
-        return (title == null) ? 0 : title.hashCode();
-    }
+	@Override
+	public int hashCode() {
+		return (title == null) ? 0 : title.hashCode();
+	}
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
+	@Override
+	public int describeContents() {
+		return 0;
+	}
 
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(id);
-        parcel.writeString(title);
-        parcel.writeString(date);
-        parcel.writeString(description);
-    }
+	@Override
+	public void writeToParcel(Parcel parcel, int i) {
+		parcel.writeString(id);
+		parcel.writeString(title);
+		parcel.writeString(date);
+		parcel.writeString(description);
+	}
 
-    public static final Creator<Task> CREATOR = new Creator<Task>() {
-        @Override
-        public Task createFromParcel(Parcel parcel) {
-            Task task = new Task();
-            task.id = parcel.readString();
-            task.title = parcel.readString();
-            task.date = parcel.readString();
-            task.description = parcel.readString();
-            return task;
-        }
+	public static final Creator<Task> CREATOR = new Creator<Task>() {
+		@Override
+		public Task createFromParcel(Parcel parcel) {
+			Task task = new Task();
+			task.id = parcel.readString();
+			task.title = parcel.readString();
+			task.date = parcel.readString();
+			task.description = parcel.readString();
+			return task;
+		}
 
-        @Override
-        public Task[] newArray(int size) {
-            return new Task[size];
-        }
-    };
+		@Override
+		public Task[] newArray(int size) {
+			return new Task[size];
+		}
+	};
 }

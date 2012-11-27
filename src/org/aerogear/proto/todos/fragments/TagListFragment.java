@@ -17,6 +17,16 @@
 
 package org.aerogear.proto.todos.fragments;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.aerogear.android.Callback;
+import org.aerogear.android.pipeline.Pipe;
+import org.aerogear.proto.todos.R;
+import org.aerogear.proto.todos.ToDoApplication;
+import org.aerogear.proto.todos.activities.TodoActivity;
+import org.aerogear.proto.todos.data.Tag;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -29,114 +39,115 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.actionbarsherlock.app.SherlockFragment;
-import org.aerogear.android.Callback;
-import org.aerogear.android.pipeline.Pipe;
-import org.aerogear.proto.todos.R;
-import org.aerogear.proto.todos.ToDoApplication;
-import org.aerogear.proto.todos.activities.TodoActivity;
-import org.aerogear.proto.todos.data.Tag;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.actionbarsherlock.app.SherlockFragment;
 
 public class TagListFragment extends SherlockFragment {
-    private ArrayAdapter<Tag> adapter;
-    private List<Tag> tags = new ArrayList<Tag>();
-    private Pipe<Tag> pipe;
+	private ArrayAdapter<Tag> adapter;
+	private List<Tag> tags = new ArrayList<Tag>();
+	private Pipe<Tag> pipe;
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.list, null);
+		View view = inflater.inflate(R.layout.list, null);
 
-        TextView title = (TextView) view.findViewById(R.id.title);
-        title.setText(getResources().getString(R.string.tags));
+		TextView title = (TextView) view.findViewById(R.id.title);
+		title.setText(getResources().getString(R.string.tags));
 
-        ImageView add = (ImageView) view.findViewById(R.id.add);
-        add.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                ((TodoActivity) getActivity()).showTagForm();
-            }
-        });
+		ImageView add = (ImageView) view.findViewById(R.id.add);
+		add.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View view) {
+				((TodoActivity) getActivity()).showTagForm();
+			}
+		});
 
-        adapter = new ArrayAdapter<Tag>(getActivity(), android.R.layout.simple_list_item_1, tags);
-        ListView tagListView = (ListView) view.findViewById(R.id.list);
-        tagListView.setAdapter(adapter);
+		adapter = new ArrayAdapter<Tag>(getActivity(),
+				android.R.layout.simple_list_item_1, tags);
+		ListView tagListView = (ListView) view.findViewById(R.id.list);
+		tagListView.setAdapter(adapter);
 
-        tagListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                final Tag tag = tags.get(position);
-                ((TodoActivity) getActivity()).showTagForm(tag);
-            }
-        });
+		tagListView
+				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+					public void onItemClick(AdapterView<?> adapterView,
+							View view, int position, long id) {
+						final Tag tag = tags.get(position);
+						((TodoActivity) getActivity()).showTagForm(tag);
+					}
+				});
 
-        tagListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
-                final Tag tag = tags.get(position);
-                new AlertDialog.Builder(getActivity())
-                        .setMessage("Delete '" + tag.getTitle() + "'?")
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                startDelete(tag);
-                            }
-                        })
-                        .setNegativeButton("Cancel", null)
-                        .show();
-                return true;
-            }
-        });
+		tagListView
+				.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+					@Override
+					public boolean onItemLongClick(AdapterView<?> adapterView,
+							View view, int position, long id) {
+						final Tag tag = tags.get(position);
+						new AlertDialog.Builder(getActivity())
+								.setMessage("Delete '" + tag.getTitle() + "'?")
+								.setPositiveButton("Yes",
+										new DialogInterface.OnClickListener() {
+											@Override
+											public void onClick(
+													DialogInterface dialogInterface,
+													int i) {
+												startDelete(tag);
+											}
+										}).setNegativeButton("Cancel", null)
+								.show();
+						return true;
+					}
+				});
 
-        return view;
+		return view;
 
-    }
+	}
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        pipe = ((ToDoApplication)getActivity().getApplication()).getPipeline().get("tags");
-    }
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		pipe = ((ToDoApplication) getActivity().getApplication()).getPipeline()
+				.get("tags");
+	}
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        startRefresh();
-    }
+	@Override
+	public void onStart() {
+		super.onStart();
+		startRefresh();
+	}
 
-    private void startRefresh() {
-        pipe.read(new Callback<List<Tag>>() {
-            @Override
-            public void onSuccess(List<Tag> data) {
-                tags.clear();
-                tags.addAll(data);
-                adapter.notifyDataSetChanged();
-            }
+	private void startRefresh() {
+		pipe.read(new Callback<List<Tag>>() {
+			@Override
+			public void onSuccess(List<Tag> data) {
+				tags.clear();
+				tags.addAll(data);
+				adapter.notifyDataSetChanged();
+			}
 
-            @Override
-            public void onFailure(Exception e) {
-                Toast.makeText(getActivity(),
-                               "Error refreshing tags: " + e.getMessage(),
-                               Toast.LENGTH_LONG).show();
-            }
-        });
-    }
+			@Override
+			public void onFailure(Exception e) {
+				Toast.makeText(getActivity(),
+						"Error refreshing tags: " + e.getMessage(),
+						Toast.LENGTH_LONG).show();
+			}
+		});
+	}
 
-    private void startDelete(Tag tag) {
-        pipe.remove(tag.getId(), new Callback<Void>() {
-            @Override
-            public void onSuccess(Void data) {
-                startRefresh();
-            }
+	private void startDelete(Tag tag) {
+		pipe.remove(tag.getId(), new Callback<Void>() {
+			@Override
+			public void onSuccess(Void data) {
+				startRefresh();
+			}
 
-            @Override
-            public void onFailure(Exception e) {
-                Toast.makeText(getActivity(),
-                               "Error removing tag: " + e.getMessage(),
-                               Toast.LENGTH_LONG).show();
-            }
-        });
-    }
+			@Override
+			public void onFailure(Exception e) {
+				Toast.makeText(getActivity(),
+						"Error removing tag: " + e.getMessage(),
+						Toast.LENGTH_LONG).show();
+			}
+		});
+	}
 
 }

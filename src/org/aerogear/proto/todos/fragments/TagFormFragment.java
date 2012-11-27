@@ -17,6 +17,13 @@
 
 package org.aerogear.proto.todos.fragments;
 
+import org.aerogear.android.Callback;
+import org.aerogear.android.pipeline.Pipe;
+import org.aerogear.proto.todos.R;
+import org.aerogear.proto.todos.ToDoApplication;
+import org.aerogear.proto.todos.activities.TodoActivity;
+import org.aerogear.proto.todos.data.Tag;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -26,79 +33,75 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import org.aerogear.android.Callback;
-import org.aerogear.android.pipeline.Pipe;
-import org.aerogear.proto.todos.R;
-import org.aerogear.proto.todos.ToDoApplication;
-import org.aerogear.proto.todos.activities.TodoActivity;
-import org.aerogear.proto.todos.data.Tag;
 
 public class TagFormFragment extends Fragment {
 
-    private final Tag tag;
+	private final Tag tag;
 
-    public TagFormFragment() {
-        tag = new Tag();
-    }
-    
-    public TagFormFragment(Tag tag) {
-        this.tag = tag;
-    }
+	public TagFormFragment() {
+		tag = new Tag();
+	}
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public TagFormFragment(Tag tag) {
+		this.tag = tag;
+	}
 
-        View view = inflater.inflate(R.layout.form, null);
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 
-        final TextView title = (TextView) view.findViewById(R.id.title);
-        final EditText name = (EditText)view.findViewById(R.id.name);
-        final Button buttonSave = (Button) view.findViewById(R.id.buttonSave);
-        final Button buttonCancel = (Button) view.findViewById(R.id.buttonCancel);
+		View view = inflater.inflate(R.layout.form, null);
 
-        title.setText(getResources().getString(R.string.tags));
+		final TextView title = (TextView) view.findViewById(R.id.title);
+		final EditText name = (EditText) view.findViewById(R.id.name);
+		final Button buttonSave = (Button) view.findViewById(R.id.buttonSave);
+		final Button buttonCancel = (Button) view
+				.findViewById(R.id.buttonCancel);
 
-        if( tag.getId() != null ) {
-            buttonSave.setText(R.string.update);
-        }
+		title.setText(getResources().getString(R.string.tags));
 
-        name.setText(tag.getTitle());
+		if (tag.getId() != null) {
+			buttonSave.setText(R.string.update);
+		}
 
-        buttonSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (name.getText().toString().length() < 1) {
-                    name.setError("Please enter a title");
-                    return;
-                }
+		name.setText(tag.getTitle());
 
-                tag.setTitle(name.getText().toString());
+		buttonSave.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				if (name.getText().toString().length() < 1) {
+					name.setError("Please enter a title");
+					return;
+				}
 
-                Pipe<Tag> pipe = ((ToDoApplication)getActivity().getApplication()).getPipeline().get("tags");
-                pipe.save(tag, new Callback<Tag>() {
-                    @Override
-                    public void onSuccess(Tag data) {
-                        ((TodoActivity)getActivity()).showTagList();
-                    }
+				tag.setTitle(name.getText().toString());
 
-                    @Override
-                    public void onFailure(Exception e) {
-                        Toast.makeText(getActivity(),
-                                       "Error saving tag: " + e.getMessage(),
-                                       Toast.LENGTH_LONG).show();
-                    }
-                });
-            }
-        });
+				Pipe<Tag> pipe = ((ToDoApplication) getActivity()
+						.getApplication()).getPipeline().get("tags");
+				pipe.save(tag, new Callback<Tag>() {
+					@Override
+					public void onSuccess(Tag data) {
+						((TodoActivity) getActivity()).showTagList();
+					}
 
-        buttonCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ((TodoActivity) getActivity()).showTagList();
-            }
-        });
+					@Override
+					public void onFailure(Exception e) {
+						Toast.makeText(getActivity(),
+								"Error saving tag: " + e.getMessage(),
+								Toast.LENGTH_LONG).show();
+					}
+				});
+			}
+		});
 
-        return view;
+		buttonCancel.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				((TodoActivity) getActivity()).showTagList();
+			}
+		});
 
-    }
+		return view;
+
+	}
 }
-

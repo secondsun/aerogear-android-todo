@@ -15,9 +15,10 @@ import static org.junit.Assert.assertThat;
 @RunWith(RobolectricTestRunner.class)
 public class TodoActivityTest {
 
-    @Test
-    public void appNameTest() {
-        String appName = new TodoActivity().getResources().getString(R.string.app_name);
-        assertThat(appName, equalTo("TODOs"));
-    }
+	@Test
+	public void appNameTest() {
+		String appName = new TodoActivity().getResources().getString(
+				R.string.app_name);
+		assertThat(appName, equalTo("TODOs"));
+	}
 }

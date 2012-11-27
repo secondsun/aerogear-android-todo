@@ -34,50 +34,36 @@ public class LoginActivity extends Activity {
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 		if (item.getItemId() == R.id.menu_register) {
-			startActivity(new Intent(getApplicationContext(), RegisterActivity.class));
+			startActivity(new Intent(getApplicationContext(),
+					RegisterActivity.class));
 			return true;
 		}
 		return super.onMenuItemSelected(featureId, item);
 	}
-	
+
 	public void login(View loginButtonButton) {
 		String username = text(R.id.username_field);
 		String password = text(R.id.password_field);
-		ToDoApplication app = (ToDoApplication)getApplication();
+		ToDoApplication app = (ToDoApplication) getApplication();
 		app.login(username, password, new Callback<HeaderAndBody>() {
 
 			@Override
 			public void onSuccess(HeaderAndBody data) {
-				startActivity(new Intent(getApplicationContext(), TodoActivity.class));
+				startActivity(new Intent(getApplicationContext(),
+						TodoActivity.class));
 			}
 
 			@Override
 			public void onFailure(Exception e) {
-				try {
-					if (e instanceof HttpException) {
-						HttpException httpException = (HttpException) e;
-						switch (httpException.getStatusCode()) {
-						case 401:
-							Toast.makeText(LoginActivity.this, "Login failed", Toast.LENGTH_LONG).show();
-							break;
-
-						default:
-							throw new RuntimeException(new String(((HttpException) e)
-									.getData(), "UTF-8"), e);
-						}
-					} else {
-						throw new RuntimeException(e);
-					}
-				} catch (UnsupportedEncodingException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				Log.e(TAG, e.getMessage(), e);
+				Toast.makeText(LoginActivity.this, "Login failed",
+						Toast.LENGTH_LONG).show();
 			}
 		});
 	}
 
 	private String text(int field_id) {
-		EditText field = (EditText)findViewById(field_id);
+		EditText field = (EditText) findViewById(field_id);
 		return field.getText().toString();
 	}
 

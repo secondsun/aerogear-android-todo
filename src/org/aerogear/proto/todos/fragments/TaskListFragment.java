@@ -17,6 +17,16 @@
 
 package org.aerogear.proto.todos.fragments;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.aerogear.android.Callback;
+import org.aerogear.android.pipeline.Pipe;
+import org.aerogear.proto.todos.R;
+import org.aerogear.proto.todos.ToDoApplication;
+import org.aerogear.proto.todos.activities.TodoActivity;
+import org.aerogear.proto.todos.data.Task;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -29,116 +39,115 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.actionbarsherlock.app.SherlockFragment;
-import org.aerogear.android.Callback;
-
-import org.aerogear.android.pipeline.Pipe;
-import org.aerogear.proto.todos.R;
-import org.aerogear.proto.todos.ToDoApplication;
-import org.aerogear.proto.todos.activities.TodoActivity;
-import org.aerogear.proto.todos.data.Task;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class TaskListFragment extends SherlockFragment {
-    private ArrayAdapter<Task> adapter;
-    private List<Task> tasks = new ArrayList<Task>();
-    private Pipe<Task> pipe;
+	private ArrayAdapter<Task> adapter;
+	private List<Task> tasks = new ArrayList<Task>();
+	private Pipe<Task> pipe;
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.list, null);
+		View view = inflater.inflate(R.layout.list, null);
 
-        TextView title = (TextView) view.findViewById(R.id.title);
-        title.setText(getResources().getString(R.string.tasks));
+		TextView title = (TextView) view.findViewById(R.id.title);
+		title.setText(getResources().getString(R.string.tasks));
 
-        ImageView add = (ImageView) view.findViewById(R.id.add);
-        add.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                ((TodoActivity) getActivity()).showTaskForm();
-            }
-        });
+		ImageView add = (ImageView) view.findViewById(R.id.add);
+		add.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View view) {
+				((TodoActivity) getActivity()).showTaskForm();
+			}
+		});
 
-        adapter = new ArrayAdapter<Task>(getActivity(), android.R.layout.simple_list_item_1, tasks);
-        ListView todoListView = (ListView) view.findViewById(R.id.list);
-        todoListView.setAdapter(adapter);
+		adapter = new ArrayAdapter<Task>(getActivity(),
+				android.R.layout.simple_list_item_1, tasks);
+		ListView todoListView = (ListView) view.findViewById(R.id.list);
+		todoListView.setAdapter(adapter);
 
-        todoListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                final Task task = tasks.get(position);
-                ((TodoActivity) getActivity()).showTaskForm(task);
-            }
-        });
+		todoListView
+				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+					public void onItemClick(AdapterView<?> adapterView,
+							View view, int position, long id) {
+						final Task task = tasks.get(position);
+						((TodoActivity) getActivity()).showTaskForm(task);
+					}
+				});
 
-        todoListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
-                final Task task = tasks.get(position);
-                new AlertDialog.Builder(getActivity())
-                        .setMessage("Delete '" + task.getTitle() + "'?")
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                startDelete(task);
-                            }
-                        })
-                        .setNegativeButton("Cancel", null)
-                        .show();
-                return true;
-            }
-        });
+		todoListView
+				.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+					@Override
+					public boolean onItemLongClick(AdapterView<?> adapterView,
+							View view, int position, long id) {
+						final Task task = tasks.get(position);
+						new AlertDialog.Builder(getActivity())
+								.setMessage("Delete '" + task.getTitle() + "'?")
+								.setPositiveButton("Yes",
+										new DialogInterface.OnClickListener() {
+											@Override
+											public void onClick(
+													DialogInterface dialogInterface,
+													int i) {
+												startDelete(task);
+											}
+										}).setNegativeButton("Cancel", null)
+								.show();
+						return true;
+					}
+				});
 
+		return view;
 
-        return view;
+	}
 
-    }
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		pipe = ((ToDoApplication) getActivity().getApplication()).getPipeline()
+				.get("tasks");
+	}
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        pipe = ((ToDoApplication)getActivity().getApplication()).getPipeline().get("tasks");
-    }
+	@Override
+	public void onStart() {
+		super.onStart();
+		startRefresh();
+	}
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        startRefresh();
-    }
+	public void startRefresh() {
+		pipe.read(new Callback<List<Task>>() {
 
-    public void startRefresh() {
-        pipe.read( new Callback<List<Task>>() {
+			@Override
+			public void onSuccess(List<Task> data) {
+				tasks.clear();
+				tasks.addAll(data);
+				adapter.notifyDataSetChanged();
+			}
 
-            @Override
-            public void onSuccess(List<Task> data) {
-                tasks.clear();
-                tasks.addAll(data);
-                adapter.notifyDataSetChanged();
-            }
+			@Override
+			public void onFailure(Exception e) {
+				Toast.makeText(getActivity(),
+						"Error refreshing tasks: " + e.getMessage(),
+						Toast.LENGTH_LONG).show();
+			}
+		});
+	}
 
-            @Override
-            public void onFailure(Exception e) {
-                Toast.makeText(getActivity(),
-                        "Error refreshing tasks: " + e.getMessage(),
-                        Toast.LENGTH_LONG).show();
-            }
-        });
-    }
+	private void startDelete(Task task) {
+		pipe.remove(task.getId(), new Callback<Void>() {
+			@Override
+			public void onSuccess(Void data) {
+				startRefresh();
+			}
 
-    private void startDelete(Task task) {
-        pipe.remove(task.getId(), new Callback<Void>() {
-            @Override
-            public void onSuccess(Void data) {
-                startRefresh();
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                Toast.makeText(getActivity(),
-                               "Error removing task: " + e.getMessage(),
-                               Toast.LENGTH_LONG).show();
-            }
-        });
-    }
+			@Override
+			public void onFailure(Exception e) {
+				Toast.makeText(getActivity(),
+						"Error removing task: " + e.getMessage(),
+						Toast.LENGTH_LONG).show();
+			}
+		});
+	}
 }
