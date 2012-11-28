@@ -1,16 +1,14 @@
 package org.aerogear.proto.todos.activities;
 
-import java.io.UnsupportedEncodingException;
-
 import org.aerogear.android.Callback;
 import org.aerogear.android.core.HeaderAndBody;
-import org.aerogear.android.core.HttpException;
 import org.aerogear.proto.todos.R;
 import org.aerogear.proto.todos.ToDoApplication;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +16,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class LoginActivity extends Activity {
+
+	protected static final String TAG = LoginActivity.class.getSimpleName();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
