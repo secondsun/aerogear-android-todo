@@ -17,10 +17,14 @@
 
 package org.aerogear.proto.todos.data;
 
+import org.aerogear.android.RecordId;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Tag implements Parcelable {
+	
+	@RecordId
 	private String id;
 	private String title;
 
