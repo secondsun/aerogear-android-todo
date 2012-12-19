@@ -1,7 +1,7 @@
 package org.aerogear.proto.todos.activities;
 
 import org.aerogear.android.Callback;
-import org.aerogear.android.core.HeaderAndBody;
+import org.aerogear.android.http.HeaderAndBody;
 import org.aerogear.proto.todos.R;
 import org.aerogear.proto.todos.ToDoApplication;
 

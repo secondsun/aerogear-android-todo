@@ -26,7 +26,7 @@ import org.aerogear.android.Pipeline;
 import org.aerogear.android.authentication.AuthenticationConfig;
 import org.aerogear.android.authentication.AuthenticationModule;
 import org.aerogear.android.authentication.impl.Authenticator;
-import org.aerogear.android.core.HeaderAndBody;
+import org.aerogear.android.http.HeaderAndBody;
 import org.aerogear.android.impl.pipeline.PipeConfig;
 import org.aerogear.proto.todos.data.Project;
 import org.aerogear.proto.todos.data.Tag;
