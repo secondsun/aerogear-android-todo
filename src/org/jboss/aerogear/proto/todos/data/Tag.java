@@ -15,30 +15,18 @@
  * limitations under the License.
  */
 
-package org.aerogear.proto.todos.data;
+package org.jboss.aerogear.proto.todos.data;
 
-import org.aerogear.android.RecordId;
+import org.jboss.aerogear.android.RecordId;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- *
- */
-public class Task implements Parcelable {
-
+public class Tag implements Parcelable {
+	
 	@RecordId
 	private String id;
 	private String title;
-	private String date;
-	private String description;
-
-	public Task() {
-	}
-
-	public Task(String title) {
-		this.title = title;
-	}
 
 	public String getId() {
 		return id;
@@ -56,22 +44,6 @@ public class Task implements Parcelable {
 		this.title = title;
 	}
 
-	public String getDate() {
-		return date;
-	}
-
-	public void setDate(String date) {
-		this.date = date;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
 	@Override
 	public String toString() {
 		return title;
@@ -79,17 +51,19 @@ public class Task implements Parcelable {
 
 	@Override
 	public boolean equals(Object o) {
-		if (o == null || o.getClass() != getClass())
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
 			return false;
-		Task other = (Task) o;
-		if (title == null)
-			return other.getTitle() == null;
-		return title.equals(other.getTitle());
+		Tag tag = (Tag) o;
+		if (title != null ? !title.equals(tag.title) : tag.title != null)
+			return false;
+		return true;
 	}
 
 	@Override
 	public int hashCode() {
-		return (title == null) ? 0 : title.hashCode();
+		return title != null ? title.hashCode() : 0;
 	}
 
 	@Override
@@ -98,27 +72,23 @@ public class Task implements Parcelable {
 	}
 
 	@Override
-	public void writeToParcel(Parcel parcel, int i) {
+	public void writeToParcel(Parcel parcel, int flags) {
 		parcel.writeString(id);
 		parcel.writeString(title);
-		parcel.writeString(date);
-		parcel.writeString(description);
 	}
 
-	public static final Creator<Task> CREATOR = new Creator<Task>() {
+	public static final Parcelable.Creator<Tag> CREATOR = new Parcelable.Creator<Tag>() {
 		@Override
-		public Task createFromParcel(Parcel parcel) {
-			Task task = new Task();
-			task.id = parcel.readString();
-			task.title = parcel.readString();
-			task.date = parcel.readString();
-			task.description = parcel.readString();
-			return task;
+		public Tag createFromParcel(Parcel parcel) {
+			Tag tag = new Tag();
+			tag.id = parcel.readString();
+			tag.title = parcel.readString();
+			return tag;
 		}
 
 		@Override
-		public Task[] newArray(int size) {
-			return new Task[size];
+		public Tag[] newArray(int size) {
+			return new Tag[size];
 		}
 	};
 }

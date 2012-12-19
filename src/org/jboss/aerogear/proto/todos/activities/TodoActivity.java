@@ -15,20 +15,20 @@
  * limitations under the License.
  */
 
-package org.aerogear.proto.todos.activities;
+package org.jboss.aerogear.proto.todos.activities;
 
-import org.aerogear.android.Callback;
-import org.aerogear.proto.todos.R;
-import org.aerogear.proto.todos.ToDoApplication;
-import org.aerogear.proto.todos.data.Project;
-import org.aerogear.proto.todos.data.Tag;
-import org.aerogear.proto.todos.data.Task;
-import org.aerogear.proto.todos.fragments.ProjectFormFragment;
-import org.aerogear.proto.todos.fragments.ProjectListFragment;
-import org.aerogear.proto.todos.fragments.TagFormFragment;
-import org.aerogear.proto.todos.fragments.TagListFragment;
-import org.aerogear.proto.todos.fragments.TaskFormFragment;
-import org.aerogear.proto.todos.fragments.TaskListFragment;
+import org.jboss.aerogear.android.Callback;
+import org.jboss.aerogear.proto.todos.R;
+import org.jboss.aerogear.proto.todos.ToDoApplication;
+import org.jboss.aerogear.proto.todos.data.Project;
+import org.jboss.aerogear.proto.todos.data.Tag;
+import org.jboss.aerogear.proto.todos.data.Task;
+import org.jboss.aerogear.proto.todos.fragments.ProjectFormFragment;
+import org.jboss.aerogear.proto.todos.fragments.ProjectListFragment;
+import org.jboss.aerogear.proto.todos.fragments.TagFormFragment;
+import org.jboss.aerogear.proto.todos.fragments.TagListFragment;
+import org.jboss.aerogear.proto.todos.fragments.TaskFormFragment;
+import org.jboss.aerogear.proto.todos.fragments.TaskListFragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

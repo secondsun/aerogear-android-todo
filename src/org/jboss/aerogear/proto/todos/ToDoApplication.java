@@ -15,22 +15,22 @@
  * limitations under the License.
  */
 
-package org.aerogear.proto.todos;
+package org.jboss.aerogear.proto.todos;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 
-import org.aerogear.android.Callback;
-import org.aerogear.android.Pipeline;
-import org.aerogear.android.authentication.AuthenticationConfig;
-import org.aerogear.android.authentication.AuthenticationModule;
-import org.aerogear.android.authentication.impl.Authenticator;
-import org.aerogear.android.http.HeaderAndBody;
-import org.aerogear.android.impl.pipeline.PipeConfig;
-import org.aerogear.proto.todos.data.Project;
-import org.aerogear.proto.todos.data.Tag;
-import org.aerogear.proto.todos.data.Task;
+import org.jboss.aerogear.android.Callback;
+import org.jboss.aerogear.android.Pipeline;
+import org.jboss.aerogear.android.authentication.AuthenticationConfig;
+import org.jboss.aerogear.android.authentication.AuthenticationModule;
+import org.jboss.aerogear.android.authentication.impl.Authenticator;
+import org.jboss.aerogear.android.http.HeaderAndBody;
+import org.jboss.aerogear.android.impl.pipeline.PipeConfig;
+import org.jboss.aerogear.proto.todos.data.Project;
+import org.jboss.aerogear.proto.todos.data.Tag;
+import org.jboss.aerogear.proto.todos.data.Task;
 
 import android.app.Application;
 

@@ -15,17 +15,17 @@
  * limitations under the License.
  */
 
-package org.aerogear.proto.todos.fragments;
+package org.jboss.aerogear.proto.todos.fragments;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.aerogear.android.Callback;
-import org.aerogear.android.pipeline.Pipe;
-import org.aerogear.proto.todos.R;
-import org.aerogear.proto.todos.ToDoApplication;
-import org.aerogear.proto.todos.activities.TodoActivity;
-import org.aerogear.proto.todos.data.Tag;
+import org.jboss.aerogear.android.Callback;
+import org.jboss.aerogear.android.pipeline.Pipe;
+import org.jboss.aerogear.proto.todos.R;
+import org.jboss.aerogear.proto.todos.ToDoApplication;
+import org.jboss.aerogear.proto.todos.activities.TodoActivity;
+import org.jboss.aerogear.proto.todos.data.Tag;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;

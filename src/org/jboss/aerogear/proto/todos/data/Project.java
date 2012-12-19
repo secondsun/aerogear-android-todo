@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-package org.aerogear.proto.todos.data;
+package org.jboss.aerogear.proto.todos.data;
 
-import org.aerogear.android.RecordId;
+import org.jboss.aerogear.android.RecordId;
 
 import android.os.Parcel;
 import android.os.Parcelable;

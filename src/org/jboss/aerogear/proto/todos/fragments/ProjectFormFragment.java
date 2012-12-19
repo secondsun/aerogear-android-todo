@@ -15,14 +15,14 @@
  * limitations under the License.
  */
 
-package org.aerogear.proto.todos.fragments;
+package org.jboss.aerogear.proto.todos.fragments;
 
-import org.aerogear.android.Callback;
-import org.aerogear.android.pipeline.Pipe;
-import org.aerogear.proto.todos.R;
-import org.aerogear.proto.todos.ToDoApplication;
-import org.aerogear.proto.todos.activities.TodoActivity;
-import org.aerogear.proto.todos.data.Tag;
+import org.jboss.aerogear.android.Callback;
+import org.jboss.aerogear.android.pipeline.Pipe;
+import org.jboss.aerogear.proto.todos.R;
+import org.jboss.aerogear.proto.todos.ToDoApplication;
+import org.jboss.aerogear.proto.todos.activities.TodoActivity;
+import org.jboss.aerogear.proto.todos.data.Project;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -34,16 +34,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class TagFormFragment extends Fragment {
+public class ProjectFormFragment extends Fragment {
 
-	private final Tag tag;
+	private final Project project;
 
-	public TagFormFragment() {
-		tag = new Tag();
+	public ProjectFormFragment() {
+		project = new Project();
 	}
 
-	public TagFormFragment(Tag tag) {
-		this.tag = tag;
+	public ProjectFormFragment(Project project) {
+		this.project = project;
 	}
 
 	@Override
@@ -58,13 +58,13 @@ public class TagFormFragment extends Fragment {
 		final Button buttonCancel = (Button) view
 				.findViewById(R.id.buttonCancel);
 
-		title.setText(getResources().getString(R.string.tags));
+		title.setText(getResources().getString(R.string.projects));
 
-		if (tag.getId() != null) {
+		if (project.getId() != null) {
 			buttonSave.setText(R.string.update);
 		}
 
-		name.setText(tag.getTitle());
+		name.setText(project.getTitle());
 
 		buttonSave.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -74,20 +74,20 @@ public class TagFormFragment extends Fragment {
 					return;
 				}
 
-				tag.setTitle(name.getText().toString());
+				project.setTitle(name.getText().toString());
 
-				Pipe<Tag> pipe = ((ToDoApplication) getActivity()
-						.getApplication()).getPipeline().get("tags");
-				pipe.save(tag, new Callback<Tag>() {
+				Pipe<Project> pipe = ((ToDoApplication) getActivity()
+						.getApplication()).getPipeline().get("projects");
+				pipe.save(project, new Callback<Project>() {
 					@Override
-					public void onSuccess(Tag data) {
-						((TodoActivity) getActivity()).showTagList();
+					public void onSuccess(Project data) {
+						((TodoActivity) getActivity()).showProjectList();
 					}
 
 					@Override
 					public void onFailure(Exception e) {
 						Toast.makeText(getActivity(),
-								"Error saving tag: " + e.getMessage(),
+								"Error saving project: " + e.getMessage(),
 								Toast.LENGTH_LONG).show();
 					}
 				});
@@ -97,11 +97,12 @@ public class TagFormFragment extends Fragment {
 		buttonCancel.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				((TodoActivity) getActivity()).showTagList();
+				((TodoActivity) getActivity()).showProjectList();
 			}
 		});
 
 		return view;
 
 	}
+
 }

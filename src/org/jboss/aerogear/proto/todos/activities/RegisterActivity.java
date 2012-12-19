@@ -1,9 +1,9 @@
-package org.aerogear.proto.todos.activities;
+package org.jboss.aerogear.proto.todos.activities;
 
-import org.aerogear.android.Callback;
-import org.aerogear.android.http.HeaderAndBody;
-import org.aerogear.proto.todos.R;
-import org.aerogear.proto.todos.ToDoApplication;
+import org.jboss.aerogear.android.Callback;
+import org.jboss.aerogear.android.http.HeaderAndBody;
+import org.jboss.aerogear.proto.todos.R;
+import org.jboss.aerogear.proto.todos.ToDoApplication;
 
 import android.content.Intent;
 import android.os.Bundle;

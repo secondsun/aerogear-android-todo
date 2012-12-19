@@ -15,17 +15,17 @@
  * limitations under the License.
  */
 
-package org.aerogear.proto.todos.fragments;
+package org.jboss.aerogear.proto.todos.fragments;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.aerogear.android.Callback;
-import org.aerogear.android.pipeline.Pipe;
-import org.aerogear.proto.todos.R;
-import org.aerogear.proto.todos.ToDoApplication;
-import org.aerogear.proto.todos.activities.TodoActivity;
-import org.aerogear.proto.todos.data.Task;
+import org.jboss.aerogear.android.Callback;
+import org.jboss.aerogear.android.pipeline.Pipe;
+import org.jboss.aerogear.proto.todos.R;
+import org.jboss.aerogear.proto.todos.ToDoApplication;
+import org.jboss.aerogear.proto.todos.activities.TodoActivity;
+import org.jboss.aerogear.proto.todos.data.Project;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -42,10 +42,10 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
-public class TaskListFragment extends SherlockFragment {
-	private ArrayAdapter<Task> adapter;
-	private List<Task> tasks = new ArrayList<Task>();
-	private Pipe<Task> pipe;
+public class ProjectListFragment extends SherlockFragment {
+	private ArrayAdapter<Project> adapter;
+	private List<Project> projects = new ArrayList<Project>();
+	private Pipe<Project> pipe;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,44 +54,45 @@ public class TaskListFragment extends SherlockFragment {
 		View view = inflater.inflate(R.layout.list, null);
 
 		TextView title = (TextView) view.findViewById(R.id.title);
-		title.setText(getResources().getString(R.string.tasks));
+		title.setText(getResources().getString(R.string.projects));
 
 		ImageView add = (ImageView) view.findViewById(R.id.add);
 		add.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
-				((TodoActivity) getActivity()).showTaskForm();
+				((TodoActivity) getActivity()).showProjectForm();
 			}
 		});
 
-		adapter = new ArrayAdapter<Task>(getActivity(),
-				android.R.layout.simple_list_item_1, tasks);
-		ListView todoListView = (ListView) view.findViewById(R.id.list);
-		todoListView.setAdapter(adapter);
+		adapter = new ArrayAdapter<Project>(getActivity(),
+				android.R.layout.simple_list_item_1, projects);
+		ListView projectListView = (ListView) view.findViewById(R.id.list);
+		projectListView.setAdapter(adapter);
 
-		todoListView
+		projectListView
 				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 					public void onItemClick(AdapterView<?> adapterView,
 							View view, int position, long id) {
-						final Task task = tasks.get(position);
-						((TodoActivity) getActivity()).showTaskForm(task);
+						final Project project = projects.get(position);
+						((TodoActivity) getActivity()).showProjectForm(project);
 					}
 				});
 
-		todoListView
+		projectListView
 				.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 					@Override
 					public boolean onItemLongClick(AdapterView<?> adapterView,
 							View view, int position, long id) {
-						final Task task = tasks.get(position);
+						final Project project = projects.get(position);
 						new AlertDialog.Builder(getActivity())
-								.setMessage("Delete '" + task.getTitle() + "'?")
+								.setMessage(
+										"Delete '" + project.getTitle() + "'?")
 								.setPositiveButton("Yes",
 										new DialogInterface.OnClickListener() {
 											@Override
 											public void onClick(
 													DialogInterface dialogInterface,
 													int i) {
-												startDelete(task);
+												startDelete(project);
 											}
 										}).setNegativeButton("Cancel", null)
 								.show();
@@ -107,7 +108,7 @@ public class TaskListFragment extends SherlockFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		pipe = ((ToDoApplication) getActivity().getApplication()).getPipeline()
-				.get("tasks");
+				.get("projects");
 	}
 
 	@Override
@@ -117,26 +118,25 @@ public class TaskListFragment extends SherlockFragment {
 	}
 
 	public void startRefresh() {
-		pipe.read(new Callback<List<Task>>() {
-
+		pipe.read(new Callback<List<Project>>() {
 			@Override
-			public void onSuccess(List<Task> data) {
-				tasks.clear();
-				tasks.addAll(data);
+			public void onSuccess(List<Project> data) {
+				projects.clear();
+				projects.addAll(data);
 				adapter.notifyDataSetChanged();
 			}
 
 			@Override
 			public void onFailure(Exception e) {
 				Toast.makeText(getActivity(),
-						"Error refreshing tasks: " + e.getMessage(),
+						"Error refreshing projects: " + e.getMessage(),
 						Toast.LENGTH_LONG).show();
 			}
 		});
 	}
 
-	private void startDelete(Task task) {
-		pipe.remove(task.getId(), new Callback<Void>() {
+	private void startDelete(Project project) {
+		pipe.remove(project.getId(), new Callback<Void>() {
 			@Override
 			public void onSuccess(Void data) {
 				startRefresh();
@@ -145,7 +145,7 @@ public class TaskListFragment extends SherlockFragment {
 			@Override
 			public void onFailure(Exception e) {
 				Toast.makeText(getActivity(),
-						"Error removing task: " + e.getMessage(),
+						"Error removing project: " + e.getMessage(),
 						Toast.LENGTH_LONG).show();
 			}
 		});
